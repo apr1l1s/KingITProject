@@ -7,15 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <StackPanel Style="{DynamicResource MainWindowStackPanel}">
-            <TextBlock Text="Логин"/>
-            <TextBox x:Name="LogBox"
-                     Margin="0,0,0,5"/>
-            <TextBlock Text="Пароль"
-                       Margin="0,5,0,0"/>
-            <PasswordBox x:Name="PassBox"
-                         Margin="0,0,0,5"/>
-            <Button Click="Login" Style="{DynamicResource MainWindowLogButton}"/>
-        </StackPanel>
+        <Frame x:Name="frame"/>
     </Grid>
 </Window>

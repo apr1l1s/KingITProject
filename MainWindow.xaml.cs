@@ -21,15 +21,11 @@ namespace KingITProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        Regex login = new Regex("/A[0-9,A-Z,a-z]/z");
+        
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void Login(object sender, RoutedEventArgs e)
-        {
-            
+            frame.Navigate(new KingITProject.Pages.LoginPage());
         }
     }
 }
