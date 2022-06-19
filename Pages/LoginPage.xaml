@@ -9,15 +9,22 @@
       Title="LoginPage">
 
     <Grid>
+        <Image Source="../icon.png"
+               Width="200"
+               Height="200"
+               Margin="0,0,0,200"/>
         <StackPanel Style="{DynamicResource MainWindowStackPanel}">
-            <TextBlock Text="Логин"/>
-            <TextBox x:Name="LogBox"
-                     Margin="0,0,0,5"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" 
+                       Text="Логин"/>
+            <TextBox Style="{DynamicResource TextBoxStyle}" 
+                     x:Name="LogBox"/>
             <TextBlock Text="Пароль"
-                       Margin="0,5,0,0"/>
-            <PasswordBox x:Name="PassBox"
-                         Margin="0,0,0,5"/>
-            <Button Click="Login" Style="{DynamicResource MainWindowLogButton}"/>
+                       Style="{DynamicResource TextBlockStyle}"/>
+            <PasswordBox Style="{DynamicResource PasswordBoxStyle}" 
+                         x:Name="PassBox"/>
+            <Button Template="{DynamicResource ButtonTemplate}" 
+                    Click="Login" 
+                    Style="{DynamicResource MainWindowLogButton}"/>
         </StackPanel>
     </Grid>
 </Page>

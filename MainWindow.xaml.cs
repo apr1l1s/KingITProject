@@ -21,11 +21,10 @@ namespace KingITProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        
         public MainWindow()
         {
             InitializeComponent();
-            frame.Navigate(new KingITProject.Pages.LoginPage());
+            frame.Navigate(new KingITProject.Pages.LoginPage(this));
         }
     }
 }

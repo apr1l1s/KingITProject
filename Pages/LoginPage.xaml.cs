@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -22,14 +23,14 @@ namespace KingITProject.Pages
     /// </summary>
     public partial class LoginPage : Page
     {
+        MainWindow mainWindow;
         int Attemps = 0;
-        Regex mail = new Regex(@"\A[a-z,0-9]{4,20}?@[a-z]{2,8}?\.(ru|com)\z");
-        Regex pas = new Regex(@"\A[a-z,A-Z,0-9]{8,16}?\z");
-        Regex login = new Regex(@"^[0-9,A-Z,a-z]{1,10}@[A-Z,a-z]{1,10}\.[A-Z,a-z]{2,4}$");
-        Regex password = new Regex(@"^[0-9,A-Z,a-z]{4,9}$");
-        public LoginPage()
+        Regex mail = new Regex(@"\A[A-z,0-9]{4,20}?@[a-z]{2,8}?\.(ru|com)\z");
+        Regex pas = new Regex(@"\A[A-z,0-9]{4,16}?\z");
+        public LoginPage(MainWindow main)
         {
             InitializeComponent();
+            mainWindow = main;
         }
         private void Login(object sender, RoutedEventArgs e)
         {
@@ -43,9 +44,17 @@ namespace KingITProject.Pages
                     {
                         if(pas.IsMatch(PassBox.Password))
                         {
-                            if(CheckUser(LogBox.Text, PassBox.Password))
+                            var UserType = CheckUser(LogBox.Text, PassBox.Password);
+                            if (UserType != 0)
                             {
                                 MessageBox.Show("Вы вошли");
+                                
+                                switch (UserType)
+                                {
+                                    case 3:
+                                        mainWindow.frame.Navigate(new ManagerC.MallList(mainWindow));
+                                        break;
+                                }
                             } else
                             {
                                 MessageBox.Show("Неправильный логин или пароль");
@@ -61,8 +70,12 @@ namespace KingITProject.Pages
                 }
             }
         }
-        private void ShowCaptcha() { Attemps = 0; }
-        private bool CheckUser(string login, string pass)
+        public void ShowCaptcha() {
+            var captcha = new Captcha();
+            captcha.ShowDialog();
+            Attemps = 0; 
+        }
+        private int CheckUser(string login, string pass)
         {
             using (KingITDBEntities db = new KingITDBEntities())
             {
@@ -70,7 +83,7 @@ namespace KingITProject.Pages
                                where emp.login.ToLower() == login.ToLower() &&
                                emp.password == pass
                                select emp).FirstOrDefault();
-                return (current != null) ? true : false;
+                return (current != null) ? current.post_id : 0;
             }
         }
     }
