@@ -22,8 +22,7 @@
                        Style="{DynamicResource TextBlockStyle}"/>
             <PasswordBox Style="{DynamicResource PasswordBoxStyle}" 
                          x:Name="PassBox"/>
-            <Button Template="{DynamicResource ButtonTemplate}" 
-                    Click="Login" 
+            <Button Click="Login" 
                     Style="{DynamicResource MainWindowLogButton}"/>
         </StackPanel>
     </Grid>

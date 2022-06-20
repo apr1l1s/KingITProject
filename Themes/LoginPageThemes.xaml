@@ -12,7 +12,22 @@
     <SolidColorBrush x:Key="TextBox.Static.Text" Color="#557179"/>
     <SolidColorBrush x:Key="TextBox.MouseOver.Text" Color="#FF78909C"/>
     <SolidColorBrush x:Key="TextBox.Focus.Text" Color="#FFFF9C1A"/>
-    
+
+    <SolidColorBrush x:Key="Button.Default.Background" Color="White"/>
+    <SolidColorBrush x:Key="Button.Default.Border" Color="#FFFF9C1A"/>
+
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFFF9C1A"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FFFF9C1A"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Foreground" Color="#557179"/>
+
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFFFD6A0"/>
+    <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FFFF9C1A"/>
+    <SolidColorBrush x:Key="Button.Pressed.Foreground" Color="#FF78909C"/>
+
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="White"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="White"/>
+    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF78909C"/>
+
     <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Margin" Value="0,0,0,5"/>
         <Setter Property="FontSize" Value="14"/>
@@ -21,28 +36,14 @@
         <Setter Property="TextWrapping" Value="NoWrap"/>
         <Setter Property="TextTrimming" Value="None"/>
     </Style>
-
-    <SolidColorBrush x:Key="Button.Default.Background" Color="White"/>
-    <SolidColorBrush x:Key="Button.Default.Border" Color="#FFFF9C1A"/>
-
-    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFFF9C1A"/>
-    <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FFFF9C1A"/>
-    <SolidColorBrush x:Key="Button.MouseOver.Foreground" Color="#557179"/>
-    
-    <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFFFD6A0"/>
-    <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FFFF9C1A"/>
-    <SolidColorBrush x:Key="Button.Pressed.Foreground" Color="#FF78909C"/>
-    
-    <SolidColorBrush x:Key="Button.Disabled.Background" Color="White"/>
-    <SolidColorBrush x:Key="Button.Disabled.Border" Color="White"/>
-    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF78909C"/>
     
     <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type ButtonBase}">
         <Border x:Name="border" 
                 Background="{TemplateBinding Background}" 
                 BorderBrush="{TemplateBinding BorderBrush}" 
                 BorderThickness="{TemplateBinding BorderThickness}" 
-                SnapsToDevicePixels="true">
+                SnapsToDevicePixels="true"
+                CornerRadius="2">
             <ContentPresenter x:Name="contentPresenter" 
                               Focusable="False" 
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
@@ -142,9 +143,9 @@
         </Style.Triggers>
     </Style>
     <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
-        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+        <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBox.Static.Text}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -157,8 +158,15 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
-                        <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                    <Border x:Name="border" 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost" 
+                                      Focusable="false" 
+                                      HorizontalScrollBarVisibility="Hidden" 
+                                      VerticalScrollBarVisibility="Hidden"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
@@ -197,5 +205,6 @@
         <Setter Property="Width" Value="150"/>
         <Setter Property="Content" Value="Войти"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Template" Value="{DynamicResource ButtonTemplate}"/>
     </Style>
 </ResourceDictionary>

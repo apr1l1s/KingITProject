@@ -27,29 +27,38 @@
                       SelectionChanged="StatusChanged"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <DataGrid Style="{DynamicResource DataGridStyle}" 
-                      x:Name="DG"
-                      AutoGenerateColumns="False">
+            <DataGrid x:Name="DG"
+                      Height="330"
+                      AutoGenerateColumns="False"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Название ТЦ"
-                                        Binding="{Binding title}"/>
-                    <DataGridTextColumn Header="Статус"
-                                        Binding="{Binding status_title}"/>
-                    <DataGridTextColumn Header="Кол-во павильонов"
-                                        Binding="{Binding halls_count}"/>
-                    <DataGridTextColumn Header="Город"
-                                        Binding="{Binding address}"/>
-                    <DataGridTextColumn Header="Стоимость постройки"
-                                        Binding="{Binding cost}"/>
-                    <DataGridTextColumn Header="Этажность"
-                                        Binding="{Binding floors_count}"/>
-                    <DataGridTextColumn Header="Коэф добавочной стоимости" 
-                                        Binding="{Binding value_added_factor}"
+                    <DataGridTextColumn Header="Название"
+                                        Binding="{Binding title}"
                                         Width="*"/>
+                    <DataGridTextColumn Header="Статус"
+                                        Binding="{Binding status_title}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Кол-во павильонов"
+                                        Binding="{Binding halls_count}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Город"
+                                        Binding="{Binding address}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Стоимость"
+                                        Binding="{Binding cost}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Этажность"
+                                        Binding="{Binding floors_count}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Коэф" 
+                                        
+                                        Width="40"
+                                        Binding="{Binding value_added_factor}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
-        <Button Grid.Row="2" 
+        <Button Style="{DynamicResource ButtonStyle}" 
+                Grid.Row="2" 
                 Content="Назад"
                 Width="200"
                 Height="25"
