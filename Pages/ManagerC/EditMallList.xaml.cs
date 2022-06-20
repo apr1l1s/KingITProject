@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using KingITProject.Model;
+using Microsoft.Win32;
+
 namespace KingITProject.Pages.ManagerC
 {
     /// <summary>
@@ -36,7 +38,10 @@ namespace KingITProject.Pages.ManagerC
         }
         private void ChangeImage(object sender, RoutedEventArgs e)
         {
-
+            var dialog = new OpenFileDialog();
+            dialog.ShowDialog();
+            current.icon = KingITProject.Tools.Conventer.ImageToBytes(dialog.FileName);
+            ImageMall.Source = KingITProject.Tools.Conventer.BytesToImage(current.icon);
         }
         private void Exit(object sender, RoutedEventArgs e)
         {
