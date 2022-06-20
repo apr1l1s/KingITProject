@@ -15,20 +15,40 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBox Width="200"
-                     Height="25"
-                     Margin="20,0,5,0"
-                     TextChanged="AddressChanged"
-                     x:Name="AddressBox"/>
             <ComboBox Width="200"
                       Height="25"
                       Margin="20,0,5,0"
-                      x:Name="CB"
+                      x:Name="AddressCB"
                       SelectionChanged="StatusChanged"/>
+            <ComboBox Width="120"
+                      Height="25"
+                      Margin="20,0,5,0"
+                      x:Name="StatusCB"
+                      SelectionChanged="StatusChanged"/>
+            <Button Style="{DynamicResource ButtonStyle}"
+                    Width="170"
+                    Content="Удалить выбранный тц"
+                    Height="25"
+                    Margin="20,0,0,0"
+                    Click="Delete"
+                    x:Name="DelButton"
+                    IsEnabled="False"/>
+            <Button Style="{DynamicResource ButtonStyle}"
+                    Margin="20,0,0,0"
+                    Content="Редактировать выбранный тц"
+                    Click="Edit"
+                    x:Name="EditButton"
+                    IsEnabled="False"/>
         </StackPanel>
-        <StackPanel Grid.Row="1">
+        <StackPanel Grid.Row="1"
+                    Margin="20,0,20,0">
             <DataGrid x:Name="DG"
-                      Height="330"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserResizeRows="False"
+                      IsReadOnly="True"
+                      SelectedCellsChanged="DG_SelectedCellsChanged"
+                      Height="345"
                       AutoGenerateColumns="False"
                       ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <DataGrid.Columns>
@@ -57,11 +77,16 @@
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
-        <Button Style="{DynamicResource ButtonStyle}" 
-                Grid.Row="2" 
-                Content="Назад"
-                Width="200"
-                Height="25"
-                Click="Exit"/>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="2" >
+            <Button Style="{DynamicResource ButtonStyle}" 
+                    Content="Назад"
+                    Click="Exit"/>
+            <Button Style="{DynamicResource ButtonStyle}"
+                    Margin="360,0,0,0"
+                    Content="Добавить новый тц"
+                    Click="Add"/>
+            
+        </StackPanel>
     </Grid>
 </Page>

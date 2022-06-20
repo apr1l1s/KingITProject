@@ -26,62 +26,78 @@ namespace KingITProject.Pages.ManagerC
         {
             mainWindow = main;
             InitializeComponent();
-            CB.Items.Add("План");
-            CB.Items.Add("Строительство");
-            CB.Items.Add("Реализация");
-            CB.Items.Add("...");
-            FillCB("");
+            FillAddressCB();
+            FillStatusCB();
+            FillDG("", "");
             
         }
-        private void FillCB(string address)
+        private void FillStatusCB()
         {
-            if (CB.SelectedIndex == -1 || CB.SelectedIndex == 3)
+            StatusCB.Items.Add("План");
+            StatusCB.Items.Add("Строительство");
+            StatusCB.Items.Add("Реализация");
+            StatusCB.Items.Add("...");
+        }
+        private void FillAddressCB()
+        {
+            try
             {
-                try
+                using (KingITDBEntities db = new KingITDBEntities())
                 {
-                    using (KingITDBEntities db = new KingITDBEntities())
-                    {
-
-                        if (address == "")
-                        {
-                            DG.ItemsSource = (from m in db.getMalls() select m).ToList();
-                        }
-                        else
-                        {
-                            DG.ItemsSource = (from m in db.getMalls() where m.address.Contains(address) select m).ToList();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Подключение к базе данных вызвало сбой:\n" + ex.Message);
+                    var list = (from m in db.getMalls() select m.address).Distinct().ToList();
+                    list.Add("...");
+                    AddressCB.ItemsSource = list;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                try
+                MessageBox.Show("Подключение к базе данных вызвало сбой:\n" + ex.Message);
+            }
+        }
+        private void FillDG(string address, string status_title)
+        {
+            try
+            {
+                using (KingITDBEntities db = new KingITDBEntities())
                 {
-                    using (KingITDBEntities db = new KingITDBEntities())
-                    {
 
-                        if (address == "")
+                    if (address == "" && status_title == "")
+                    {
+                        DG.ItemsSource = (from m in db.getMalls() 
+                                          select m).ToList();
+                    }
+                    else
+                    {
+                        if (address != "" && status_title == "")
                         {
                             DG.ItemsSource = (from m in db.getMalls() 
-                                              where m.status_title == CB.SelectedValue.ToString() 
+                                              where m.address == address 
                                               select m).ToList();
-                        }
-                        else
+                        } else
                         {
-                            DG.ItemsSource = (from m in db.getMalls() 
-                                              where m.address.Contains(address) && m.status_title == CB.SelectedValue.ToString() 
-                                              select m).ToList();
+                            if (address == "" && status_title != "")
+                            {
+                                DG.ItemsSource = (from m in db.getMalls() 
+                                                  where m.status_title == status_title 
+                                                  select m).ToList();
+                            } else
+                            {
+                                if (address != "" && status_title != "")
+                                {
+                                    DG.ItemsSource = (from m in db.getMalls() 
+                                                      where m.status_title == status_title &&
+                                                      m.address == address
+                                                      select m).ToList();
+                                }
+                            }
                         }
+                        
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Подключение к базе данных вызвало сбой:\n" + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Подключение к базе данных вызвало сбой:\n" + ex.Message);
             }
         }
 
@@ -92,12 +108,50 @@ namespace KingITProject.Pages.ManagerC
 
         private void AddressChanged(object sender, TextChangedEventArgs e)
         {
-            FillCB(AddressBox.Text);
+            var address = (AddressCB.SelectedIndex == -1 || Convert.ToString(AddressCB.SelectedValue) == "...") ? "" : AddressCB.SelectedValue.ToString();
+            var status = (StatusCB.SelectedIndex == -1 || StatusCB.SelectedIndex == 3) ? "" : StatusCB.SelectedValue.ToString();
+            FillDG(address, status);
         }
 
         private void StatusChanged(object sender, SelectionChangedEventArgs e)
         {
-            FillCB(AddressBox.Text);
+            var address = (AddressCB.SelectedIndex == -1 || Convert.ToString(AddressCB.SelectedValue) == "...") ? "" : AddressCB.SelectedValue.ToString();
+            var status = (StatusCB.SelectedIndex == -1 || StatusCB.SelectedIndex == 3) ? "" : StatusCB.SelectedValue.ToString();
+            FillDG(address, status);
+        }
+
+        private void Edit(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void Add(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void Delete(object sender, RoutedEventArgs e)
+        {
+            var selectedObj = (getMalls_Result)DG.SelectedItem;
+            
+            try
+            {
+                using(KingITDBEntities db = new KingITDBEntities())
+                {
+                    mall deletedObj = (from m in db.malls
+                                      where m.mall_id == selectedObj.mall_id
+                                      select m).FirstOrDefault();
+                    db.malls.Remove(deletedObj);
+                    db.SaveChanges();
+                }
+            }catch(Exception ex)
+            {
+                MessageBox.Show("Подключение к базе данных вызвало ошибку:\n" + ex.Message);
+            }
+        }
+
+        private void DG_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+            DelButton.IsEnabled = true;
+            EditButton.IsEnabled = true;
         }
     }
 }

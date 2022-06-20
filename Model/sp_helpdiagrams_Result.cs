@@ -11,15 +11,12 @@ namespace KingITProject.Model
 {
     using System;
     
-    public partial class getMalls_Result
+    public partial class sp_helpdiagrams_Result
     {
-        public int mall_id { get; set; }
-        public string title { get; set; }
-        public string status_title { get; set; }
-        public int halls_count { get; set; }
-        public string address { get; set; }
-        public decimal cost { get; set; }
-        public int floors_count { get; set; }
-        public decimal value_added_factor { get; set; }
+        public string Database { get; set; }
+        public string Name { get; set; }
+        public int ID { get; set; }
+        public string Owner { get; set; }
+        public int OwnerID { get; set; }
     }
 }

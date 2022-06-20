@@ -10,16 +10,14 @@
 namespace KingITProject.Model
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class getMalls_Result
+    public partial class sysdiagram
     {
-        public int mall_id { get; set; }
-        public string title { get; set; }
-        public string status_title { get; set; }
-        public int halls_count { get; set; }
-        public string address { get; set; }
-        public decimal cost { get; set; }
-        public int floors_count { get; set; }
-        public decimal value_added_factor { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

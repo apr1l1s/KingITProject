@@ -11,15 +11,9 @@ namespace KingITProject.Model
 {
     using System;
     
-    public partial class getMalls_Result
+    public partial class sp_helpdiagramdefinition_Result
     {
-        public int mall_id { get; set; }
-        public string title { get; set; }
-        public string status_title { get; set; }
-        public int halls_count { get; set; }
-        public string address { get; set; }
-        public decimal cost { get; set; }
-        public int floors_count { get; set; }
-        public decimal value_added_factor { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace KingITProject.Pages
     {
         MainWindow mainWindow;
         int Attemps = 0;
-        Regex mail = new Regex(@"\A[A-z,0-9]{4,20}?@[a-z]{2,8}?\.(ru|com)\z");
+        Regex mail = new Regex(@"\A[A-z,0-9]{4,20}?@[A-z]{2,8}?\.[A-z]{2,3}\z");
         Regex pas = new Regex(@"\A[A-z,0-9]{4,16}?\z");
         public LoginPage(MainWindow main)
         {
