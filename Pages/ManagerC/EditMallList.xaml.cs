@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using KingITProject.Model;
 namespace KingITProject.Pages.ManagerC
 {
     /// <summary>
@@ -20,9 +20,31 @@ namespace KingITProject.Pages.ManagerC
     /// </summary>
     public partial class EditMallList : Page
     {
-        public EditMallList()
+        MainWindow main;
+        mall current;
+        public EditMallList(MainWindow _main)
         {
             InitializeComponent();
+            main = _main;
+            current = new mall();
+
+        }
+        public EditMallList(mall _current, MainWindow _main)
+        {
+            InitializeComponent();
+            current = _current;
+        }
+        private void ChangeImage(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+            main.frame.Navigate(new MallList(main));
+        }
+        private void Save(object sender, RoutedEventArgs e)
+        {
+            main.frame.Navigate(new MallList(main));
         }
     }
 }

@@ -9,6 +9,31 @@
       Title="EditMallList">
 
     <Grid>
-        
+        <StackPanel Width="400"
+                    Height="400"
+                    Margin="10,10,0,40"
+                    HorizontalAlignment="Left">
+            <TextBox x:Name="TitleBox"/>
+            <TextBox x:Name="FactorBox"/>
+            <TextBox x:Name="CostBox"/>
+            <TextBox x:Name="AddressBox"/>
+            <TextBox x:Name="FloorsBox"/>
+            <TextBox x:Name="HallssBox"/>
+            <ComboBox x:Name="StatusBox"/>
+            <Button Click="ChangeImage"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Bottom"
+                    Width="350"
+                    Height="100" Margin="0,0,0,10">
+            <Button Content="Назад" Click="Exit"/>
+            <Button Content="Сохранить" Click="Save"/>
+        </StackPanel>
+        <Image Width="300"
+               Height="300"
+               HorizontalAlignment="Right"
+               Margin="0,10,10,140"
+               Stretch="Fill"/>
     </Grid>
 </Page>
