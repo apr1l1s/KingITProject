@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="./Themes/LoginPageThemes.xaml"/>
                 <ResourceDictionary Source="./Themes/MallListThemes.xaml"/>
+                <ResourceDictionary Source="./Themes/EditMallListThemes.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

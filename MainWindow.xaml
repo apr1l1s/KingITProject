@@ -6,8 +6,9 @@
         Icon="./icon.png"
         xmlns:local="clr-namespace:KingITProject"
         mc:Ignorable="d"
-        Title="KingITProject" 
-        Height="450" 
+        ResizeMode="NoResize"
+        Title="KingIT" 
+        Height="500" 
         Width="800">
     <Grid>
         <Frame x:Name="frame"

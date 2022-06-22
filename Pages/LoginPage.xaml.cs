@@ -86,7 +86,6 @@ namespace KingITProject.Pages
                 return (current != null) ? current.post_id : 0;
             }
         }
-
         private void SetDesktop(object sender, RoutedEventArgs e)
         {
             if (mainWindow != null)

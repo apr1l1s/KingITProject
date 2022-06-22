@@ -13,14 +13,28 @@
                     Height="400"
                     Margin="10,10,0,40"
                     HorizontalAlignment="Left">
-            <TextBox x:Name="TitleBox"/>
-            <TextBox x:Name="FactorBox"/>
-            <TextBox x:Name="CostBox"/>
-            <TextBox x:Name="AddressBox"/>
-            <TextBox x:Name="FloorsBox"/>
-            <TextBox x:Name="HallssBox"/>
-            <ComboBox x:Name="StatusBox"/>
-            <Button Click="ChangeImage"/>
+            <TextBox 
+                x:Name="TitleBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBox 
+                x:Name="FactorBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBox 
+                x:Name="CostBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBox 
+                x:Name="AddressBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBox 
+                x:Name="FloorsBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBox 
+                x:Name="HallssBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <ComboBox 
+                x:Name="StatusBox"/>
+            <Button 
+                Click="ChangeImage"/>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right"
                     Orientation="Horizontal"

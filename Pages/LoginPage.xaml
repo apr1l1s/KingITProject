@@ -18,8 +18,8 @@
         <Image Source="../icon.png"
                Width="200"
                Height="200"
-               Margin="0,0,0,200"/>
-        <StackPanel Style="{DynamicResource MainWindowStackPanel}">
+               Margin="300,45,300,205"/>
+        <StackPanel Style="{DynamicResource MainWindowStackPanel}" Margin="0,250,0,0" VerticalAlignment="Top">
             <TextBlock Style="{DynamicResource TextBlockStyle}" 
                        Text="Логин"/>
             <TextBox Style="{DynamicResource TextBoxStyle}" 
