@@ -21,7 +21,11 @@ namespace KingITProject.Model
             : base("name=KingITDBEntitiesL")
         {
         }
-    
+        public KingITDBEntities(string sConnectionString)
+            : base(sConnectionString)
+        {
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

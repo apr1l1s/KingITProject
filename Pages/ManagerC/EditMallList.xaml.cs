@@ -38,10 +38,14 @@ namespace KingITProject.Pages.ManagerC
         }
         private void ChangeImage(object sender, RoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog();
-            dialog.ShowDialog();
-            current.icon = KingITProject.Tools.Conventer.ImageToBytes(dialog.FileName);
-            ImageMall.Source = KingITProject.Tools.Conventer.BytesToImage(current.icon);
+            try
+            {
+                var dialog = new OpenFileDialog();
+                dialog.ShowDialog();
+                current.icon = KingITProject.Tools.Conventer.ImageToBytes(dialog.FileName);
+                ImageMall.Source = KingITProject.Tools.Conventer.BytesToImage(current.icon);
+            }
+            catch { }
         }
         private void Exit(object sender, RoutedEventArgs e)
         {

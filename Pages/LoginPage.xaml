@@ -7,8 +7,14 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="LoginPage">
-
     <Grid>
+        <Menu VerticalAlignment="Top"
+              Height="25">
+            <MenuItem Header="Подключение">
+                <RadioButton Content="Desktop" IsChecked="True" Checked="SetDesktop"/>
+                <RadioButton Content="Laptop" Checked="SetLaptop"/>
+            </MenuItem>
+        </Menu>
         <Image Source="../icon.png"
                Width="200"
                Height="200"

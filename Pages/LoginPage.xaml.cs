@@ -77,7 +77,7 @@ namespace KingITProject.Pages
         }
         private int CheckUser(string login, string pass)
         {
-            using (KingITDBEntities db = new KingITDBEntities())
+            using (KingITDBEntities db = new KingITDBEntities(mainWindow.connectionName))
             {
                 var current = (from emp in db.employers
                                where emp.login.ToLower() == login.ToLower() &&
@@ -85,6 +85,17 @@ namespace KingITProject.Pages
                                select emp).FirstOrDefault();
                 return (current != null) ? current.post_id : 0;
             }
+        }
+
+        private void SetDesktop(object sender, RoutedEventArgs e)
+        {
+            if (mainWindow != null)
+                mainWindow.connectionName = "name=KingITDBEntitiesD";
+        }
+        private void SetLaptop(object sender, RoutedEventArgs e)
+        {
+            if (mainWindow != null)
+                mainWindow.connectionName = "name=KingITDBEntitiesL";
         }
     }
 }

@@ -42,7 +42,7 @@ namespace KingITProject.Pages.ManagerC
         {
             try
             {
-                using (KingITDBEntities db = new KingITDBEntities())
+                using (KingITDBEntities db = new KingITDBEntities(mainWindow.connectionName))
                 {
                     var list = (from m in db.getMalls() select m.address).Distinct().ToList();
                     list.Add("...");
@@ -58,7 +58,7 @@ namespace KingITProject.Pages.ManagerC
         {
             try
             {
-                using (KingITDBEntities db = new KingITDBEntities())
+                using (KingITDBEntities db = new KingITDBEntities(mainWindow.connectionName))
                 {
 
                     if (address == "" && status_title == "")
@@ -117,7 +117,7 @@ namespace KingITProject.Pages.ManagerC
             var selectedObj = (getMalls_Result)DG.SelectedItem;
             try
             {
-                using (KingITDBEntities db = new KingITDBEntities())
+                using (KingITDBEntities db = new KingITDBEntities(mainWindow.connectionName))
                 {
                     mall deletedObj = (from m in db.malls
                                        where m.mall_id == selectedObj.mall_id
@@ -136,7 +136,7 @@ namespace KingITProject.Pages.ManagerC
             var selectedObj = (getMalls_Result)DG.SelectedItem;
             try
             {
-                using (KingITDBEntities db = new KingITDBEntities())
+                using (KingITDBEntities db = new KingITDBEntities(mainWindow.connectionName))
                 {
                     mall editedObj = (from m in db.malls
                                        where m.mall_id == selectedObj.mall_id
