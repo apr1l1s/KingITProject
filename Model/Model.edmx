@@ -23,10 +23,10 @@
         <EntityType Name="halls">
           <Key>
             <PropertyRef Name="hall_number" />
-            <PropertyRef Name="mail_id" />
+            <PropertyRef Name="mall_id" />
           </Key>
           <Property Name="hall_number" Type="char" MaxLength="4" Nullable="false" />
-          <Property Name="mail_id" Type="int" Nullable="false" />
+          <Property Name="mall_id" Type="int" Nullable="false" />
           <Property Name="floor" Type="int" Nullable="false" />
           <Property Name="status" Type="int" Nullable="false" />
           <Property Name="area" Type="decimal" Precision="5" Scale="1" Nullable="false" />
@@ -83,6 +83,30 @@
           <Property Name="contact_phone" Type="char" MaxLength="20" Nullable="false" />
           <Property Name="address" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "KingITDB.dbo.getHallsView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="getHallsView">
+          <Key>
+            <PropertyRef Name="status_id" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="floor" />
+            <PropertyRef Name="hall_number" />
+            <PropertyRef Name="mall_id" />
+            <PropertyRef Name="area" />
+            <PropertyRef Name="status" />
+            <PropertyRef Name="value_added_factor" />
+            <PropertyRef Name="cost" />
+          </Key>
+          <Property Name="status_id" Type="int" Nullable="false" />
+          <Property Name="title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="floor" Type="int" Nullable="false" />
+          <Property Name="hall_number" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="mall_id" Type="int" Nullable="false" />
+          <Property Name="area" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="status" Type="int" Nullable="false" />
+          <Property Name="value_added_factor" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="cost" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+        </EntityType>
         <Association Name="fk_id_role">
           <End Role="postes" Type="Self.postes" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -107,7 +131,7 @@
               <PropertyRef Name="mall_id" />
             </Principal>
             <Dependent Role="halls">
-              <PropertyRef Name="mail_id" />
+              <PropertyRef Name="mall_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -141,7 +165,7 @@
           <ReferentialConstraint>
             <Principal Role="halls">
               <PropertyRef Name="hall_number" />
-              <PropertyRef Name="mail_id" />
+              <PropertyRef Name="mall_id" />
             </Principal>
             <Dependent Role="rent">
               <PropertyRef Name="hall_number" />
@@ -188,6 +212,24 @@
           </ReferentialConstraint>
         </Association>
         <Function Name="change_rent_date" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="getHalls" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="current" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="mall_status" Type="nvarchar" MaxLength="50" />
+                <Property Name="title" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="floor" Type="int" Nullable="false" />
+                <Property Name="hall_number" Type="char" MaxLength="4" Nullable="false" />
+                <Property Name="mall_id" Type="int" Nullable="false" />
+                <Property Name="area" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+                <Property Name="hall_status" Type="nvarchar" MaxLength="50" />
+                <Property Name="value_added_factor" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+                <Property Name="cost" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="getMalls" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <ReturnType>
             <CollectionType>
@@ -212,6 +254,19 @@
           <EntitySet Name="rent" EntityType="Self.rent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="statuses" EntityType="Self.statuses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tenants" EntityType="Self.tenants" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="getHallsView" EntityType="Self.getHallsView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [getHallsView].[status_id] AS [status_id], 
+    [getHallsView].[title] AS [title], 
+    [getHallsView].[floor] AS [floor], 
+    [getHallsView].[hall_number] AS [hall_number], 
+    [getHallsView].[mall_id] AS [mall_id], 
+    [getHallsView].[area] AS [area], 
+    [getHallsView].[status] AS [status], 
+    [getHallsView].[value_added_factor] AS [value_added_factor], 
+    [getHallsView].[cost] AS [cost]
+    FROM [dbo].[getHallsView] AS [getHallsView]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="fk_id_role" Association="Self.fk_id_role">
             <End Role="postes" EntitySet="postes" />
             <End Role="employers" EntitySet="employers" />
@@ -250,6 +305,17 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="KingITDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <ComplexType Name="getHalls_Result">
+          <Property Name="mall_status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="floor" Type="Int32" Nullable="false" />
+          <Property Name="hall_number" Type="String" MaxLength="4" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="mall_id" Type="Int32" Nullable="false" />
+          <Property Name="area" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="hall_status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="value_added_factor" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="cost" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+        </ComplexType>
         <ComplexType Name="getMalls_Result">
           <Property Name="mall_id" Type="Int32" Nullable="false" />
           <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
@@ -280,10 +346,10 @@
         <EntityType Name="hall">
           <Key>
             <PropertyRef Name="hall_number" />
-            <PropertyRef Name="mail_id" />
+            <PropertyRef Name="mall_id" />
           </Key>
           <Property Name="hall_number" Type="String" MaxLength="4" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="mail_id" Type="Int32" Nullable="false" />
+          <Property Name="mall_id" Type="Int32" Nullable="false" />
           <Property Name="floor" Type="Int32" Nullable="false" />
           <Property Name="status" Type="Int32" Nullable="false" />
           <Property Name="area" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
@@ -354,6 +420,28 @@
           <Property Name="address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="rents" Relationship="Self.FK_rent_tenants" FromRole="tenants" ToRole="rent" />
         </EntityType>
+        <EntityType Name="getHallsView">
+          <Key>
+            <PropertyRef Name="status_id" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="floor" />
+            <PropertyRef Name="hall_number" />
+            <PropertyRef Name="mall_id" />
+            <PropertyRef Name="area" />
+            <PropertyRef Name="status" />
+            <PropertyRef Name="value_added_factor" />
+            <PropertyRef Name="cost" />
+          </Key>
+          <Property Name="status_id" Type="Int32" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="floor" Type="Int32" Nullable="false" />
+          <Property Name="hall_number" Type="String" MaxLength="4" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="mall_id" Type="Int32" Nullable="false" />
+          <Property Name="area" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="status" Type="Int32" Nullable="false" />
+          <Property Name="value_added_factor" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="cost" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+        </EntityType>
         <Association Name="fk_id_role">
           <End Role="postes" Type="Self.poste" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -390,7 +478,7 @@
               <PropertyRef Name="mall_id" />
             </Principal>
             <Dependent Role="halls">
-              <PropertyRef Name="mail_id" />
+              <PropertyRef Name="mall_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -412,7 +500,7 @@
           <ReferentialConstraint>
             <Principal Role="halls">
               <PropertyRef Name="hall_number" />
-              <PropertyRef Name="mail_id" />
+              <PropertyRef Name="mall_id" />
             </Principal>
             <Dependent Role="rent">
               <PropertyRef Name="hall_number" />
@@ -458,7 +546,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="KingITDBEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="KingITDBEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="employers" EntityType="Self.employer" />
           <EntitySet Name="halls" EntityType="Self.hall" />
           <EntitySet Name="malls" EntityType="Self.mall" />
@@ -466,6 +554,7 @@
           <EntitySet Name="rents" EntityType="Self.rent" />
           <EntitySet Name="statuses" EntityType="Self.status" />
           <EntitySet Name="tenants" EntityType="Self.tenant" />
+          <EntitySet Name="getHallsViews" EntityType="Self.getHallsView" />
           <AssociationSet Name="fk_id_role" Association="Self.fk_id_role">
             <End Role="postes" EntitySet="postes" />
             <End Role="employers" EntitySet="employers" />
@@ -498,6 +587,9 @@
             <End Role="tenants" EntitySet="tenants" />
             <End Role="rent" EntitySet="rents" />
           </AssociationSet>
+          <FunctionImport Name="getHalls" IsComposable="true" ReturnType="Collection(KingITDBModel.getHalls_Result)">
+            <Parameter Name="current" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="getMalls" IsComposable="true" ReturnType="Collection(KingITDBModel.getMalls_Result)" />
           <FunctionImport Name="change_rent_date" />
         </EntityContainer>
@@ -506,7 +598,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище KingITDBModelContainer" CdmEntityContainer="KingITDBEntities">
+        <EntityContainerMapping StorageEntityContainer="Хранилище KingITDBModelContainer" CdmEntityContainer="KingITDBEntities1">
           <EntitySetMapping Name="employers">
             <EntityTypeMapping TypeName="KingITDBModel.employer">
               <MappingFragment StoreEntitySet="employers">
@@ -527,7 +619,7 @@
             <EntityTypeMapping TypeName="KingITDBModel.hall">
               <MappingFragment StoreEntitySet="halls">
                 <ScalarProperty Name="hall_number" ColumnName="hall_number" />
-                <ScalarProperty Name="mail_id" ColumnName="mail_id" />
+                <ScalarProperty Name="mall_id" ColumnName="mall_id" />
                 <ScalarProperty Name="floor" ColumnName="floor" />
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="area" ColumnName="area" />
@@ -591,6 +683,36 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="getHallsViews">
+            <EntityTypeMapping TypeName="KingITDBModel.getHallsView">
+              <MappingFragment StoreEntitySet="getHallsView">
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="floor" ColumnName="floor" />
+                <ScalarProperty Name="hall_number" ColumnName="hall_number" />
+                <ScalarProperty Name="mall_id" ColumnName="mall_id" />
+                <ScalarProperty Name="area" ColumnName="area" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="value_added_factor" ColumnName="value_added_factor" />
+                <ScalarProperty Name="cost" ColumnName="cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionName="Хранилище KingITDBModel.getHalls" FunctionImportName="getHalls">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KingITDBModel.getHalls_Result">
+                <ScalarProperty Name="mall_status" ColumnName="mall_status" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="floor" ColumnName="floor" />
+                <ScalarProperty Name="hall_number" ColumnName="hall_number" />
+                <ScalarProperty Name="mall_id" ColumnName="mall_id" />
+                <ScalarProperty Name="area" ColumnName="area" />
+                <ScalarProperty Name="hall_status" ColumnName="hall_status" />
+                <ScalarProperty Name="value_added_factor" ColumnName="value_added_factor" />
+                <ScalarProperty Name="cost" ColumnName="cost" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionName="Хранилище KingITDBModel.getMalls" FunctionImportName="getMalls">
             <ResultMapping>
               <ComplexTypeMapping TypeName="KingITDBModel.getMalls_Result">

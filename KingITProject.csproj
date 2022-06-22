@@ -74,6 +74,12 @@
     <Compile Include="Model\employer.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\getHallsView.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\getHalls_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\getMalls_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -110,6 +116,9 @@
     <Compile Include="Model\tenant.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ManagerC\HallsList.xaml.cs">
+      <DependentUpon>HallsList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tools\Conventer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -132,6 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ManagerC\EditMallList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ManagerC\HallsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

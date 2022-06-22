@@ -83,7 +83,13 @@
                     Content="Назад"
                     Click="Exit"/>
             <Button Style="{DynamicResource ButtonStyle}"
-                    Margin="360,0,0,0"
+                    Content="Открыть список павильонов"
+                    IsEnabled="False"
+                    Margin="80,0,0,0"
+                    x:Name="HallButton"
+                    Click="Open"/>
+            <Button Style="{DynamicResource ButtonStyle}"
+                    Margin="80,0,0,0"
                     Content="Добавить новый тц"
                     Click="Add"/>
             

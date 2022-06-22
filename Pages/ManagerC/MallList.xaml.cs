@@ -160,10 +160,29 @@ namespace KingITProject.Pages.ManagerC
         {
             mainWindow.frame.Navigate(new LoginPage(mainWindow));
         }
+        private void Open(object sender, RoutedEventArgs e)
+        {
+            var selectedObj = (getMalls_Result)DG.SelectedItem;
+            try
+            {
+                using (KingITDBEntities db = new KingITDBEntities(mainWindow.connectionName))
+                {
+                    mall editedObj = (from m in db.malls
+                                      where m.mall_id == selectedObj.mall_id
+                                      select m).FirstOrDefault();
+                    mainWindow.frame.Navigate(new HallsList(mainWindow, editedObj));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Подключение к базе данных вызвало ошибку:\n" + ex.Message);
+            }
+        }
         private void DG_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             DelButton.IsEnabled = true;
             EditButton.IsEnabled = true;
+            HallButton.IsEnabled = true;
         }
     }
 }

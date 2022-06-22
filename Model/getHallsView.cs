@@ -12,25 +12,16 @@ namespace KingITProject.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class hall
+    public partial class getHallsView
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public hall()
-        {
-            this.rents = new HashSet<rent>();
-        }
-    
+        public int status_id { get; set; }
+        public string title { get; set; }
+        public int floor { get; set; }
         public string hall_number { get; set; }
         public int mall_id { get; set; }
-        public int floor { get; set; }
-        public int status { get; set; }
         public decimal area { get; set; }
-        public decimal cost { get; set; }
+        public int status { get; set; }
         public decimal value_added_factor { get; set; }
-    
-        public virtual mall mall { get; set; }
-        public virtual status status1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<rent> rents { get; set; }
+        public decimal cost { get; set; }
     }
 }

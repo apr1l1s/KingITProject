@@ -18,7 +18,7 @@ namespace KingITProject.Model
     public partial class KingITDBEntities : DbContext
     {
         public KingITDBEntities()
-            : base("name=KingITDBEntities")
+            : base("name=KingITDBEntitiesD")
         {
         }
         public KingITDBEntities(string s)
@@ -38,11 +38,22 @@ namespace KingITProject.Model
         public virtual DbSet<rent> rents { get; set; }
         public virtual DbSet<status> statuses { get; set; }
         public virtual DbSet<tenant> tenants { get; set; }
+        public virtual DbSet<getHallsView> getHallsViews { get; set; }
     
-        [DbFunction("KingITDBEntities", "getMalls")]
+        [DbFunction("KingITDBEntities1", "getHalls")]
+        public virtual IQueryable<getHalls_Result> getHalls(Nullable<int> current)
+        {
+            var currentParameter = current.HasValue ?
+                new ObjectParameter("current", current) :
+                new ObjectParameter("current", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<getHalls_Result>("[KingITDBEntities1].[getHalls](@current)", currentParameter);
+        }
+    
+        [DbFunction("KingITDBEntities1", "getMalls")]
         public virtual IQueryable<getMalls_Result> getMalls()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<getMalls_Result>("[KingITDBEntities].[getMalls]()");
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<getMalls_Result>("[KingITDBEntities1].[getMalls]()");
         }
     
         public virtual int change_rent_date()
