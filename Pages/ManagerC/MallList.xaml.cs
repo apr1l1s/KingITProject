@@ -122,7 +122,7 @@ namespace KingITProject.Pages.ManagerC
                     mall deletedObj = (from m in db.malls
                                        where m.mall_id == selectedObj.mall_id
                                        select m).FirstOrDefault();
-                    db.malls.Remove(deletedObj);
+                    deletedObj.status_id = 3;
                     db.SaveChanges();
                 }
             }
@@ -130,6 +130,9 @@ namespace KingITProject.Pages.ManagerC
             {
                 MessageBox.Show("Подключение к базе данных вызвало ошибку:\n" + ex.Message);
             }
+            var address = (AddressCB.SelectedIndex == -1 || Convert.ToString(AddressCB.SelectedValue) == "...") ? "" : AddressCB.SelectedValue.ToString();
+            var status = (StatusCB.SelectedIndex == -1 || StatusCB.SelectedIndex == 3) ? "" : StatusCB.SelectedValue.ToString();
+            FillDG(address, status);
         }
         private void Edit(object sender, RoutedEventArgs e)
         {

@@ -9,46 +9,87 @@
       Title="EditMallList">
 
     <Grid>
+        <TextBlock Text="Редактирование ТЦ"
+                   Style="{DynamicResource TextBlockStyle}"
+                   Width="150"
+                   Height="25"
+                   FontWeight="Bold"
+                   Margin="110,24,540,401"/>
         <StackPanel Width="400"
-                    Height="400"
-                    Margin="10,10,0,40"
+                    Height="350"
+                    Margin="10,70,0,40"
                     HorizontalAlignment="Left">
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Название"/>
             <TextBox 
                 x:Name="TitleBox"
                 Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Коэфицент"/>
             <TextBox 
                 x:Name="FactorBox"
                 Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Стоимость"/>
             <TextBox 
                 x:Name="CostBox"
                 Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Адрес"/>
             <TextBox 
                 x:Name="AddressBox"
                 Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Этажность"/>
             <TextBox 
                 x:Name="FloorsBox"
                 Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Кол-во павильонов"/>
             <TextBox 
                 x:Name="HallssBox"
                 Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Статус"/>
             <ComboBox 
-                x:Name="StatusBox"/>
+                x:Name="StatusBox"
+                Style="{DynamicResource EditMallListComboBox}"/>
             <Button 
-                Click="ChangeImage"/>
+                Click="ChangeImage"
+                Content="Выбрать картинку" 
+                Style="{DynamicResource ButtonStyle}"
+                Margin="0,10,0,0"/>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     VerticalAlignment="Bottom"
-                    Width="350"
-                    Height="100" Margin="0,0,0,10">
-            <Button Content="Назад" Click="Exit"/>
-            <Button Content="Сохранить" Click="Save"/>
+                    Width="300"
+                    Height="100" Margin="0,0,73,10">
+            <Button 
+                Content="Назад" 
+                Click="Exit"
+                Style="{DynamicResource ButtonStyle}"
+                Width="100"
+                Margin="10,4,0,0"/>
+            <Button 
+                Content="Сохранить" 
+                Click="Save"
+                Style="{DynamicResource ButtonStyle}"
+                Margin="80,4,0,0"
+                Width="100"/>
         </StackPanel>
         <Image Width="300"
                Height="300"
                x:Name="ImageMall"
                HorizontalAlignment="Right"
-               Margin="0,10,10,140"
+               Margin="0,30,73,120"
                Stretch="Fill"/>
     </Grid>
 </Page>
