@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,18 +24,48 @@ namespace KingITProject.Pages.ManagerC
     {
         MainWindow main;
         mall currentMall;
+        Regex number = new Regex(@"\A[0-9]{1,3}\z");
         public HallsList(MainWindow _main, mall _currentMall)
         {
             InitializeComponent();
             main = _main;
             currentMall = _currentMall;
             FillDataGrid();
+            FillFloorBox();
+            FillStatusBox();
+        }
+        private void FillFloorBox()
+        {
+            try
+            {
+                using (var db = new KingITDBEntities(main.connectionName))
+                {
+                    var list = (from h in db.halls
+                                where h.mall_id == currentMall.mall_id
+                                orderby h.floor
+                                select h.floor.ToString()).ToList();
+                    list.Add("...");
+                    FloorCB.ItemsSource = list;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка подключения к бд");
+            }
+        }
+        private void FillStatusBox()
+        {
+            StatusCB.Items.Add("Арендован");
+            StatusCB.Items.Add("Свободен");
+            StatusCB.Items.Add("Забронирован");
+            StatusCB.Items.Add("...");
+
         }
         private void FillDataGrid()
         {
             try
             {
-                using(var db = new KingITDBEntities(main.connectionName))
+                using (var db = new KingITDBEntities(main.connectionName))
                 {
                     DG.ItemsSource = (from h in db.getHalls(currentMall.mall_id) select h).ToList();
                 }
@@ -47,7 +78,10 @@ namespace KingITProject.Pages.ManagerC
         }
         private void Add(object sender, RoutedEventArgs e)
         {
-
+            MessageBox.Show(FloorCB.SelectedValue +
+                            AreaBoxMin.Text +
+                            AreaBoxMax.Text +
+                            Convert.ToString(StatusCB.SelectedValue));
         }
         private void Edit(object sender, RoutedEventArgs e)
         {
@@ -57,9 +91,51 @@ namespace KingITProject.Pages.ManagerC
         {
 
         }
+        private void DoFilters(string floor, int min, int max, string status_title)
+        {
+            try
+            {
+                using (var db = new KingITDBEntities(main.connectionName))
+                {
+                    var ifloor = Convert.ToInt32(floor);
+                    DG.ItemsSource = (from h in db.getHalls(currentMall.mall_id)
+                                      where h.floor == ((floor == "...") ? h.floor : ifloor) &&
+                                      h.area >= ((min >= 0 || min < max) ? min : 0) &&
+                                      h.area <= ((max >= min || max <= 500) ? max : 500) &&
+                                      h.hall_status == ((status_title != "...") ? status_title : h.hall_status)
+                                      select h).ToList();
+                }
+            }
+            catch(Exception ex) { MessageBox.Show("ошибка "+ ex.Message); }
+        }
         private void DG_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
 
+        }
+        private void CB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                DoFilters(
+                FloorCB.SelectedIndex == -1 ? "..." : Convert.ToString(FloorCB.SelectedValue),
+                number.IsMatch(AreaBoxMin.Text) ? Convert.ToInt32(AreaBoxMin.Text) : 0,
+                number.IsMatch(AreaBoxMax.Text) ? Convert.ToInt32(AreaBoxMax.Text) : 500,
+                StatusCB.SelectedIndex == -1 ? "..." : Convert.ToString(StatusCB.SelectedValue));
+            }
+            catch { }
+        }
+        private void AreaBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                DoFilters(
+                FloorCB.SelectedIndex == -1 ? "..." : Convert.ToString(FloorCB.SelectedValue),
+                number.IsMatch(AreaBoxMin.Text) ? Convert.ToInt32(AreaBoxMin.Text) : 0,
+                number.IsMatch(AreaBoxMax.Text) ? Convert.ToInt32(AreaBoxMax.Text) : 500,
+                StatusCB.SelectedIndex == -1 ? "..." : Convert.ToString(StatusCB.SelectedValue));
+            }
+            catch { }
+                
         }
     }
 }
