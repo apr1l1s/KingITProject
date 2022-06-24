@@ -155,14 +155,12 @@ namespace KingITProject.Pages.ManagerC
                         searched.address = current.address;
                         searched.icon = current.icon;
                         searched.value_added_factor = current.value_added_factor;
-                        //MessageBox.Show($"{current.mall_id}: {current.title}, {current.status_id}, {current.halls_count}, {current.floors_count}, {current.value_added_factor}, {current.cost}");
                         db.SaveChanges();
                     }
                     else
                     {
                         current.mall_id = (from m in db.malls orderby m.mall_id descending select m.mall_id).FirstOrDefault() + 1;
                         db.malls.Add(current);
-                        //MessageBox.Show($"{current.mall_id}: {current.title}, {current.status_id}, {current.halls_count}, {current.floors_count}, {current.value_added_factor}, {current.cost}");
                         db.SaveChanges();
                     }
                 }
