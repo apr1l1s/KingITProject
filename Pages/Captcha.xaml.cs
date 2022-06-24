@@ -31,84 +31,27 @@ namespace KingITProject.Pages
         private Bitmap CreateImage(int Width, int Height)
         {
             Random rnd = new Random();
-            //Создадим изображение
             Bitmap result = new Bitmap(Width, Height);
-            //Вычислим позицию текста
-            int Xpos = 10;
-            int Ypos = 10;
-            //Добавим различные цвета ддя текста
-            System.Drawing.Brush[] colors = {
-                System.Drawing.Brushes.Black,
-                System.Drawing.Brushes.Red,
-                System.Drawing.Brushes.RoyalBlue,
-                System.Drawing.Brushes.Green,
-                System.Drawing.Brushes.Yellow,
-                System.Drawing.Brushes.White,
-                System.Drawing.Brushes.Tomato,
-                System.Drawing.Brushes.Sienna,
-                System.Drawing.Brushes.Pink
-            };
+            Graphics g = Graphics.FromImage(result);
 
-            //Добавим различные цвета линий
-            System.Drawing.Pen[] colorpens = {
-                 Pens.Black,
-                 Pens.Red,
-                 Pens.RoyalBlue,
-                 Pens.Green,
-                 Pens.Yellow,
-                 Pens.White,
-                 Pens.Tomato,
-                 Pens.Sienna,
-                 Pens.Pink
-            };
-
-            //Делаем случайный стиль текста
-            System.Drawing.FontStyle[] fontstyle = {
-                System.Drawing.FontStyle.Bold,
-                System.Drawing.FontStyle.Italic,
-                System.Drawing.FontStyle.Regular,
-                System.Drawing.FontStyle.Strikeout,
-                System.Drawing.FontStyle.Underline
-            };
-
-            //Добавим различные углы поворота текста
-            Int16[] rotate = { 1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6 };
-
-            //Укажем где рисовать
-            Graphics g = Graphics.FromImage((System.Drawing.Image)result);
-
-            //Пусть фон картинки будет серым
-            g.Clear(System.Drawing.Color.Gray);
-
-            //Делаем случайный угол поворота текста
-            g.RotateTransform(rnd.Next(rotate.Length));
-
-            //Генерируем текст
             text = String.Empty;
-            string ALF = "7890QWERTYUIOPASDFGHJKLZXCVBNM";
-            for (int i = 0; i < 5; ++i) text += ALF[rnd.Next(ALF.Length)];
-
-            //Нарисуем сгенирируемый текст
-            g.DrawString(text,
-            new Font("Arial", 28, fontstyle[rnd.Next(fontstyle.Length)]),
-            colors[rnd.Next(colors.Length)],
-            new PointF(Xpos, Ypos));
-
-            //Добавим немного помех
-            //Линии из углов
-            g.DrawLine(colorpens[rnd.Next(colorpens.Length)],
-            new System.Drawing.Point(0, 0),
-            new System.Drawing.Point(Width - 1, Height - 1));
-            g.DrawLine(colorpens[rnd.Next(colorpens.Length)],
-            new System.Drawing.Point(0, Height - 1),
-            new System.Drawing.Point(Width - 1, 0));
-
-            //Белые точки
-            for (int i = 0; i < Width; ++i)
-                for (int j = 0; j < Height; ++j)
-                    if (rnd.Next() % 20 == 0)
-                        result.SetPixel(i, j, System.Drawing.Color.White);
-
+            string ALF = "7890QWERTYUIPASDFGHJKLZXCVBNM";
+            while (text.Length != 5)
+            {
+                if (rnd.Next(1, 5) == 2)
+                {
+                    text += ALF[rnd.Next(1, ALF.Length-1)];
+                }
+            }
+            List<System.Drawing.Brush> brushes = new List<System.Drawing.Brush>();
+            brushes.Add(System.Drawing.Brushes.Tomato);
+            brushes.Add(System.Drawing.Brushes.Violet);
+            brushes.Add(System.Drawing.Brushes.Blue);
+            brushes.Add(System.Drawing.Brushes.Yellow);
+            var pen = new System.Drawing.Pen(brushes[rnd.Next(0, 3)],(float)3);
+            var font = new Font("Arial", 36);
+            g.DrawString(text, font, brushes[rnd.Next(0, 3)], new PointF(10, 100));
+            g.DrawLine(pen, 10, 120+rnd.Next(3,20), 200, 120 + rnd.Next(3, 20));
             return result;
         }
         public BitmapImage ToBitmapImage(Bitmap bitmap)
