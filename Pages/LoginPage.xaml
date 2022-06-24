@@ -23,11 +23,13 @@
             <TextBlock Style="{DynamicResource TextBlockStyle}" 
                        Text="Логин"/>
             <TextBox Style="{DynamicResource TextBoxStyle}" 
-                     x:Name="LogBox"/>
+                     x:Name="LogBox"
+                     Text="Adam@gmai.com"/>
             <TextBlock Text="Пароль"
                        Style="{DynamicResource TextBlockStyle}"/>
             <PasswordBox Style="{DynamicResource PasswordBoxStyle}" 
-                         x:Name="PassBox"/>
+                         x:Name="PassBox"
+                         Password="7SP9CV"/>
             <Button Click="Login" 
                     Style="{DynamicResource MainWindowLogButton}"/>
         </StackPanel>
