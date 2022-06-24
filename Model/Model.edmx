@@ -22,8 +22,7 @@
         </EntityType>
         <EntityType Name="halls">
           <Key>
-            <PropertyRef Name="hall_number" />
-            <PropertyRef Name="mall_id" />
+            <PropertyRef Name="hall_id" />
           </Key>
           <Property Name="hall_number" Type="char" MaxLength="4" Nullable="false" />
           <Property Name="mall_id" Type="int" Nullable="false" />
@@ -32,6 +31,7 @@
           <Property Name="area" Type="decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="cost" Type="decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="value_added_factor" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="hall_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="malls">
           <Key>
@@ -66,6 +66,7 @@
           <Property Name="status_id" Type="int" Nullable="false" />
           <Property Name="start_date" Type="date" Nullable="false" />
           <Property Name="end_date" Type="date" Nullable="false" />
+          <Property Name="hall_id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="statuses">
           <Key>
@@ -73,6 +74,16 @@
           </Key>
           <Property Name="status_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="title" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="tenants">
           <Key>
@@ -96,6 +107,7 @@
             <PropertyRef Name="status" />
             <PropertyRef Name="value_added_factor" />
             <PropertyRef Name="cost" />
+            <PropertyRef Name="hall_id" />
           </Key>
           <Property Name="status_id" Type="int" Nullable="false" />
           <Property Name="title" Type="nvarchar" MaxLength="100" Nullable="false" />
@@ -106,6 +118,7 @@
           <Property Name="status" Type="int" Nullable="false" />
           <Property Name="value_added_factor" Type="decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="cost" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="hall_id" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="fk_id_role">
           <End Role="postes" Type="Self.postes" Multiplicity="1">
@@ -164,12 +177,10 @@
           <End Role="rent" Type="Self.rent" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="halls">
-              <PropertyRef Name="hall_number" />
-              <PropertyRef Name="mall_id" />
+              <PropertyRef Name="hall_id" />
             </Principal>
             <Dependent Role="rent">
-              <PropertyRef Name="hall_number" />
-              <PropertyRef Name="mall_id" />
+              <PropertyRef Name="hall_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -212,6 +223,7 @@
           </ReferentialConstraint>
         </Association>
         <Function Name="change_rent_date" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="getHalls" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="current" Type="int" Mode="In" />
           <ReturnType>
@@ -226,6 +238,7 @@
                 <Property Name="hall_status" Type="nvarchar" MaxLength="50" />
                 <Property Name="value_added_factor" Type="decimal" Precision="5" Scale="1" Nullable="false" />
                 <Property Name="cost" Type="decimal" Precision="5" Scale="1" Nullable="false" />
+                <Property Name="hall_id" Type="int" Nullable="false" />
               </RowType>
             </CollectionType>
           </ReturnType>
@@ -246,6 +259,36 @@
             </CollectionType>
           </ReturnType>
         </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="Хранилище KingITDBModelContainer">
           <EntitySet Name="employers" EntityType="Self.employers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="halls" EntityType="Self.halls" Schema="dbo" store:Type="Tables" />
@@ -253,6 +296,7 @@
           <EntitySet Name="postes" EntityType="Self.postes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="rent" EntityType="Self.rent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="statuses" EntityType="Self.statuses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tenants" EntityType="Self.tenants" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="getHallsView" EntityType="Self.getHallsView" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -264,7 +308,8 @@
     [getHallsView].[area] AS [area], 
     [getHallsView].[status] AS [status], 
     [getHallsView].[value_added_factor] AS [value_added_factor], 
-    [getHallsView].[cost] AS [cost]
+    [getHallsView].[cost] AS [cost], 
+    [getHallsView].[hall_id] AS [hall_id]
     FROM [dbo].[getHallsView] AS [getHallsView]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_id_role" Association="Self.fk_id_role">
@@ -315,6 +360,7 @@
           <Property Name="hall_status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="value_added_factor" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="cost" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="hall_id" Type="Int32" Nullable="false" />
         </ComplexType>
         <ComplexType Name="getMalls_Result">
           <Property Name="mall_id" Type="Int32" Nullable="false" />
@@ -345,8 +391,7 @@
         </EntityType>
         <EntityType Name="hall">
           <Key>
-            <PropertyRef Name="hall_number" />
-            <PropertyRef Name="mall_id" />
+            <PropertyRef Name="hall_id" />
           </Key>
           <Property Name="hall_number" Type="String" MaxLength="4" FixedLength="true" Unicode="false" Nullable="false" />
           <Property Name="mall_id" Type="Int32" Nullable="false" />
@@ -355,6 +400,7 @@
           <Property Name="area" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="cost" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="value_added_factor" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="hall_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="mall" Relationship="Self.FK_pavilions_shopping_center" FromRole="halls" ToRole="malls" />
           <NavigationProperty Name="status1" Relationship="Self.FK_pavilions_statuses" FromRole="halls" ToRole="statuses" />
           <NavigationProperty Name="rents" Relationship="Self.FK_rent_halls" FromRole="halls" ToRole="rent" />
@@ -395,6 +441,7 @@
           <Property Name="status_id" Type="Int32" Nullable="false" />
           <Property Name="start_date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="end_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="hall_id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="employer" Relationship="Self.FK_rent_employers" FromRole="rent" ToRole="employers" />
           <NavigationProperty Name="hall" Relationship="Self.FK_rent_halls" FromRole="rent" ToRole="halls" />
           <NavigationProperty Name="status" Relationship="Self.FK_rent_statuses" FromRole="rent" ToRole="statuses" />
@@ -409,6 +456,16 @@
           <NavigationProperty Name="halls" Relationship="Self.FK_pavilions_statuses" FromRole="statuses" ToRole="halls" />
           <NavigationProperty Name="malls" Relationship="Self.FK_shopping_center_statuses" FromRole="statuses" ToRole="malls" />
           <NavigationProperty Name="rents" Relationship="Self.FK_rent_statuses" FromRole="statuses" ToRole="rent" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="tenant">
           <Key>
@@ -431,6 +488,7 @@
             <PropertyRef Name="status" />
             <PropertyRef Name="value_added_factor" />
             <PropertyRef Name="cost" />
+            <PropertyRef Name="hall_id" />
           </Key>
           <Property Name="status_id" Type="Int32" Nullable="false" />
           <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
@@ -441,6 +499,7 @@
           <Property Name="status" Type="Int32" Nullable="false" />
           <Property Name="value_added_factor" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="cost" Type="Decimal" Precision="5" Scale="1" Nullable="false" />
+          <Property Name="hall_id" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="fk_id_role">
           <End Role="postes" Type="Self.poste" Multiplicity="1">
@@ -499,12 +558,10 @@
           <End Role="rent" Type="Self.rent" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="halls">
-              <PropertyRef Name="hall_number" />
-              <PropertyRef Name="mall_id" />
+              <PropertyRef Name="hall_id" />
             </Principal>
             <Dependent Role="rent">
-              <PropertyRef Name="hall_number" />
-              <PropertyRef Name="mall_id" />
+              <PropertyRef Name="hall_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -553,6 +610,7 @@
           <EntitySet Name="postes" EntityType="Self.poste" />
           <EntitySet Name="rents" EntityType="Self.rent" />
           <EntitySet Name="statuses" EntityType="Self.status" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="tenants" EntityType="Self.tenant" />
           <EntitySet Name="getHallsViews" EntityType="Self.getHallsView" />
           <AssociationSet Name="fk_id_role" Association="Self.fk_id_role">
@@ -592,7 +650,48 @@
           </FunctionImport>
           <FunctionImport Name="getMalls" IsComposable="true" ReturnType="Collection(KingITDBModel.getMalls_Result)" />
           <FunctionImport Name="change_rent_date" />
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(KingITDBModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(KingITDBModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
         </EntityContainer>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -625,6 +724,7 @@
                 <ScalarProperty Name="area" ColumnName="area" />
                 <ScalarProperty Name="cost" ColumnName="cost" />
                 <ScalarProperty Name="value_added_factor" ColumnName="value_added_factor" />
+                <ScalarProperty Name="hall_id" ColumnName="hall_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -662,6 +762,7 @@
                 <ScalarProperty Name="status_id" ColumnName="status_id" />
                 <ScalarProperty Name="start_date" ColumnName="start_date" />
                 <ScalarProperty Name="end_date" ColumnName="end_date" />
+                <ScalarProperty Name="hall_id" ColumnName="hall_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -670,6 +771,17 @@
               <MappingFragment StoreEntitySet="statuses">
                 <ScalarProperty Name="status_id" ColumnName="status_id" />
                 <ScalarProperty Name="title" ColumnName="title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="KingITDBModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -695,6 +807,7 @@
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="value_added_factor" ColumnName="value_added_factor" />
                 <ScalarProperty Name="cost" ColumnName="cost" />
+                <ScalarProperty Name="hall_id" ColumnName="hall_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -710,6 +823,7 @@
                 <ScalarProperty Name="hall_status" ColumnName="hall_status" />
                 <ScalarProperty Name="value_added_factor" ColumnName="value_added_factor" />
                 <ScalarProperty Name="cost" ColumnName="cost" />
+                <ScalarProperty Name="hall_id" ColumnName="hall_id" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -728,6 +842,30 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="change_rent_date" FunctionName="Хранилище KingITDBModel.change_rent_date" />
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Хранилище KingITDBModel.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Хранилище KingITDBModel.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Хранилище KingITDBModel.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Хранилище KingITDBModel.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KingITDBModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Хранилище KingITDBModel.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KingITDBModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище KingITDBModel.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище KingITDBModel.sp_upgraddiagrams" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

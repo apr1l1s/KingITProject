@@ -51,14 +51,16 @@
                 Height="25"
                 Margin="20,0,0,0"
                 Click="Delete"
-                IsEnabled="False"/>
+                IsEnabled="False"
+                x:Name="DelButton"/>
             <Button 
                 Style="{DynamicResource ButtonStyle}"
                 Margin="20,0,0,0"
                 Width="100"
                 Content="Редактировать"
                 Click="Edit"
-                IsEnabled="False"/>
+                IsEnabled="False"
+                x:Name="EditButton"/>
         </StackPanel>
         <StackPanel 
             Grid.Row="1"

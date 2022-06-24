@@ -27,6 +27,7 @@ namespace KingITProject.Model
         public decimal area { get; set; }
         public decimal cost { get; set; }
         public decimal value_added_factor { get; set; }
+        public int hall_id { get; set; }
     
         public virtual mall mall { get; set; }
         public virtual status status1 { get; set; }

@@ -23,5 +23,6 @@ namespace KingITProject.Model
         public int status { get; set; }
         public decimal value_added_factor { get; set; }
         public decimal cost { get; set; }
+        public int hall_id { get; set; }
     }
 }

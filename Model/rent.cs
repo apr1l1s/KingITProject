@@ -22,6 +22,7 @@ namespace KingITProject.Model
         public int status_id { get; set; }
         public System.DateTime start_date { get; set; }
         public System.DateTime end_date { get; set; }
+        public int hall_id { get; set; }
     
         public virtual employer employer { get; set; }
         public virtual hall hall { get; set; }

@@ -42,7 +42,7 @@ namespace KingITProject.Pages.ManagerC
                     var list = (from h in db.halls
                                 where h.mall_id == currentMall.mall_id
                                 orderby h.floor
-                                select h.floor.ToString()).ToList();
+                                select h.floor.ToString()).Distinct().ToList();
                     list.Add("...");
                     FloorCB.ItemsSource = list;
                 }
@@ -80,14 +80,44 @@ namespace KingITProject.Pages.ManagerC
         }
         private void Edit(object sender, RoutedEventArgs e)
         {
-            if (DG.SelectedIndex != -1)
+            var selected = (getHalls_Result)DG.SelectedItem;
+            try
             {
-                main.frame.Navigate(new EditHallList(main,currentMall));
-            }
+                using(var db = new KingITDBEntities())
+                {
+                    var edited = (from h in db.halls
+                                  where h.hall_number == selected.hall_number &&
+                                  h.mall_id == selected.mall_id
+                                  select h).FirstOrDefault();
+                    main.frame.Navigate(new EditHallList(main, edited, currentMall));
+                }
+            }catch{ }
+            
         }
         private void Delete(object sender, RoutedEventArgs e)
         {
-
+            var selected = (getHalls_Result)DG.SelectedItem;
+            try
+            {
+                using (var db = new KingITDBEntities())
+                {
+                    var deleted = (from h in db.halls
+                                  where h.hall_id == selected.hall_id
+                                  select h).FirstOrDefault();
+                    deleted.status = 3;
+                    db.SaveChanges();
+                }
+            }
+            catch { }
+            try
+            {
+                DoFilters(
+                FloorCB.SelectedIndex == -1 ? "..." : Convert.ToString(FloorCB.SelectedValue),
+                decimal.TryParse(AreaBoxMin.Text, out var i) ? Convert.ToDecimal(AreaBoxMin.Text) : 0,
+                decimal.TryParse(AreaBoxMax.Text, out i) ? Convert.ToDecimal(AreaBoxMax.Text) : 500,
+                StatusCB.SelectedIndex == -1 ? "..." : Convert.ToString(StatusCB.SelectedValue));
+            }
+            catch { }
         }
         private void DoFilters(string floor, decimal min, decimal max, string status_title)
         {
@@ -112,7 +142,8 @@ namespace KingITProject.Pages.ManagerC
         }
         private void DG_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
-
+            DelButton.IsEnabled = true;
+            EditButton.IsEnabled = true;
         }
         private void CB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
