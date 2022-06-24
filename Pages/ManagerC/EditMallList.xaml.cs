@@ -143,7 +143,8 @@ namespace KingITProject.Pages.ManagerC
             {
                 using(var db = new KingITDBEntities(main.connectionName))
                 {
-                    var searched = (from m in db.malls where m.mall_id == current.status_id select m).FirstOrDefault();
+                    
+                    var searched = (from m in db.malls where m.mall_id == current.mall_id select m).FirstOrDefault();
                     if (searched != null)
                     {
                         searched.title = current.title;
@@ -154,14 +155,16 @@ namespace KingITProject.Pages.ManagerC
                         searched.address = current.address;
                         searched.icon = current.icon;
                         searched.value_added_factor = current.value_added_factor;
+                        //MessageBox.Show($"{current.mall_id}: {current.title}, {current.status_id}, {current.halls_count}, {current.floors_count}, {current.value_added_factor}, {current.cost}");
+                        db.SaveChanges();
                     }
                     else
                     {
-                        current.mall_id = (from m in db.getMalls() orderby m.mall_id descending select m.mall_id).FirstOrDefault() + 1;
-                        //MessageBox.Show($"{current.mall_id}: {current.title}, {current.status_id}, {current.halls_count}, {current.floors_count}, {current.value_added_factor}, {current.cost}");
+                        current.mall_id = (from m in db.malls orderby m.mall_id descending select m.mall_id).FirstOrDefault() + 1;
                         db.malls.Add(current);
+                        //MessageBox.Show($"{current.mall_id}: {current.title}, {current.status_id}, {current.halls_count}, {current.floors_count}, {current.value_added_factor}, {current.cost}");
+                        db.SaveChanges();
                     }
-                    db.SaveChanges();
                 }
                 main.frame.Navigate(new MallList(main));
             }
