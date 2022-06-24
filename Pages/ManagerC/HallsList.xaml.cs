@@ -58,7 +58,6 @@ namespace KingITProject.Pages.ManagerC
             StatusCB.Items.Add("Свободен");
             StatusCB.Items.Add("Забронирован");
             StatusCB.Items.Add("...");
-
         }
         private void FillDataGrid()
         {
@@ -77,14 +76,14 @@ namespace KingITProject.Pages.ManagerC
         }
         private void Add(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(FloorCB.SelectedValue +
-                            AreaBoxMin.Text +
-                            AreaBoxMax.Text +
-                            Convert.ToString(StatusCB.SelectedValue));
+            main.frame.Navigate(new EditHallList(main, currentMall));
         }
         private void Edit(object sender, RoutedEventArgs e)
         {
-
+            if (DG.SelectedIndex != -1)
+            {
+                main.frame.Navigate(new EditHallList(main,currentMall));
+            }
         }
         private void Delete(object sender, RoutedEventArgs e)
         {

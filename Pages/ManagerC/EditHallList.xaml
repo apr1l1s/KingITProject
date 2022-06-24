@@ -1,0 +1,76 @@
+﻿<Page x:Class="KingITProject.Pages.ManagerC.EditHallList"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:KingITProject.Pages.ManagerC"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="EditHallList">
+    <Grid>
+        <TextBlock Text="Редактирование ТЦ"
+                   Style="{DynamicResource TextBlockStyle}"
+                   Width="150"
+                   Height="25"
+                   FontWeight="Bold"
+                   Margin="325,24,325,401"/>
+        <StackPanel Width="400"
+                    Height="350"
+                    Margin="0,54,0,46"
+                    HorizontalAlignment="Center">
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Номер этажа"/>
+            <TextBox 
+                x:Name="FloorBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Номер павильона"/>
+            <TextBox 
+                x:Name="NumberBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Площадь"/>
+            <TextBox 
+                x:Name="AreaBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Коэфицент"/>
+            <TextBox 
+                x:Name="FactorBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Стоимость за кв2"/>
+            <TextBox 
+                x:Name="CostBox"
+                Style="{DynamicResource TextBoxStyle}"/>
+            <TextBlock 
+                Style="{DynamicResource EditMallListTextBlock}"
+                Text="Статус"/>
+            <ComboBox 
+                x:Name="StatusBox"
+                Style="{DynamicResource EditMallListComboBox}"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Top"
+                    Width="220"
+                    Height="51" Margin="0,329,0,0">
+            <Button 
+                Content="Назад" 
+                Click="Exit"
+                Style="{DynamicResource ButtonStyle}"
+                Margin="0"
+                Width="100"/>
+            <Button 
+                Content="Сохранить" 
+                Click="Save"
+                Style="{DynamicResource ButtonStyle}"
+                Width="100"/>
+        </StackPanel>
+    </Grid>
+</Page>

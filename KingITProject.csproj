@@ -116,6 +116,9 @@
     <Compile Include="Model\tenant.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ManagerC\EditHallList.xaml.cs">
+      <DependentUpon>EditHallList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ManagerC\HallsList.xaml.cs">
       <DependentUpon>HallsList.xaml</DependentUpon>
     </Compile>
@@ -137,6 +140,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\LoginPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ManagerC\EditHallList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
