@@ -24,7 +24,6 @@ namespace KingITProject.Pages.ManagerC
     {
         MainWindow main;
         mall currentMall;
-        Regex number = new Regex(@"\A[0-9]{1,3}\z");
         public HallsList(MainWindow _main, mall _currentMall)
         {
             InitializeComponent();
@@ -91,18 +90,22 @@ namespace KingITProject.Pages.ManagerC
         {
 
         }
-        private void DoFilters(string floor, int min, int max, string status_title)
+        private void DoFilters(string floor, decimal min, decimal max, string status_title)
         {
             try
             {
                 using (var db = new KingITDBEntities(main.connectionName))
                 {
-                    var ifloor = Convert.ToInt32(floor);
+                    int ifloor = 0;
+                    if (floor != "...")
+                    {
+                        ifloor = Convert.ToInt32(floor);
+                    }
                     DG.ItemsSource = (from h in db.getHalls(currentMall.mall_id)
                                       where h.floor == ((floor == "...") ? h.floor : ifloor) &&
-                                      h.area >= ((min >= 0 || min < max) ? min : 0) &&
-                                      h.area <= ((max >= min || max <= 500) ? max : 500) &&
-                                      h.hall_status == ((status_title != "...") ? status_title : h.hall_status)
+                                      h.area >= ((min >= 0 && min < max) ? min : 0) &&
+                                      h.area <= ((max >= min && max <= 500) ? max : 500) &&
+                                      h.hall_status == ((status_title == "...") ? h.hall_status : status_title)
                                       select h).ToList();
                 }
             }
@@ -118,24 +121,25 @@ namespace KingITProject.Pages.ManagerC
             {
                 DoFilters(
                 FloorCB.SelectedIndex == -1 ? "..." : Convert.ToString(FloorCB.SelectedValue),
-                number.IsMatch(AreaBoxMin.Text) ? Convert.ToInt32(AreaBoxMin.Text) : 0,
-                number.IsMatch(AreaBoxMax.Text) ? Convert.ToInt32(AreaBoxMax.Text) : 500,
+                decimal.TryParse(AreaBoxMin.Text, out var i) ? Convert.ToDecimal(AreaBoxMin.Text) : 0,
+                decimal.TryParse(AreaBoxMax.Text, out i) ? Convert.ToDecimal(AreaBoxMax.Text) : 500,
                 StatusCB.SelectedIndex == -1 ? "..." : Convert.ToString(StatusCB.SelectedValue));
             }
             catch { }
         }
         private void AreaBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            try
+            if (FloorCB != null)
             {
-                DoFilters(
-                FloorCB.SelectedIndex == -1 ? "..." : Convert.ToString(FloorCB.SelectedValue),
-                number.IsMatch(AreaBoxMin.Text) ? Convert.ToInt32(AreaBoxMin.Text) : 0,
-                number.IsMatch(AreaBoxMax.Text) ? Convert.ToInt32(AreaBoxMax.Text) : 500,
-                StatusCB.SelectedIndex == -1 ? "..." : Convert.ToString(StatusCB.SelectedValue));
+                if (StatusCB != null)
+                {
+                    DoFilters(
+                        FloorCB.SelectedIndex == -1 ? "..." : Convert.ToString(FloorCB.SelectedValue),
+                        decimal.TryParse(AreaBoxMin.Text, out var i) ? Convert.ToDecimal(AreaBoxMin.Text) : 0,
+                        decimal.TryParse(AreaBoxMax.Text, out i) ? Convert.ToDecimal(AreaBoxMax.Text) : 500,
+                        StatusCB.SelectedIndex == -1 ? "..." : Convert.ToString(StatusCB.SelectedValue));
+                }
             }
-            catch { }
-                
         }
     }
 }
