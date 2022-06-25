@@ -44,12 +44,13 @@ namespace KingITProject.Pages.ManagerC
         }
         private void FillStatusBox()
         {
-            StatusBox.Items.Add("Арендован");
             StatusBox.Items.Add("Свободен");
+            StatusBox.Items.Add("Арендован");
             StatusBox.Items.Add("Забронирован");
         }
         private void FillBoxes()
         {
+            MessageBox.Show(currentHall.hall_id.ToString());
             FloorBox.Text = Convert.ToString(currentHall.floor);
             NumberBox.Text = currentHall.hall_number;
             AreaBox.Text = Convert.ToString(currentHall.area);
@@ -57,35 +58,51 @@ namespace KingITProject.Pages.ManagerC
             CostBox.Text = Convert.ToString(currentHall.cost);
             switch (currentHall.status){
                 case 5:
-                    StatusBox.SelectedIndex = 1;
-                    break;
-                case 6:
                     StatusBox.SelectedIndex = 0;
                     break;
                 case 7:
+                    StatusBox.SelectedIndex = 1;
+                    break;
+                case 6:
                     StatusBox.SelectedIndex = 2;
                     break;
             }
         }
         private void FillCurrent()
         {
-            currentHall.floor = Convert.ToInt32(FloorBox.Text);
-            currentHall.hall_number = NumberBox.Text;
-            currentHall.area = Convert.ToDecimal(AreaBox.Text);
-            currentHall.value_added_factor = Convert.ToDecimal(FactorBox.Text);
-            currentHall.cost = Convert.ToDecimal(CostBox.Text);
-            switch (StatusBox.SelectedIndex)
+            try
             {
-                case 1:
-                    currentHall.status = 5;
-                    break;
-                case 2:
-                    currentHall.status = 6;
-                    break;
-                case 0:
-                    currentHall.status = 7;
-                    break;
+                
+                if (Convert.ToDecimal(AreaBox.Text) < 0 ||
+                    Convert.ToDecimal(FactorBox.Text) < (decimal)0.1 ||
+                    Convert.ToDecimal(FactorBox.Text) < 0 ||
+                    Convert.ToDecimal(CostBox.Text) <0) 
+                {
+                    MessageBox.Show($"{Convert.ToDecimal(AreaBox.Text)},{Convert.ToDecimal(FactorBox.Text)},{Convert.ToDecimal(FactorBox.Text)}");
+                    throw new Exception("Неверный формат строки"); 
+                } else
+                {
+                    currentHall.floor = Convert.ToInt32(FloorBox.Text);
+                    currentHall.hall_number = NumberBox.Text;
+                    currentHall.area = Convert.ToDecimal(AreaBox.Text);
+                    currentHall.value_added_factor = Convert.ToDecimal(FactorBox.Text);
+                    currentHall.cost = Convert.ToDecimal(CostBox.Text);
+                    switch (StatusBox.SelectedIndex)
+                    {
+                        case 0:
+                            currentHall.status = 5;
+                            break;
+                        case 1:
+                            currentHall.status = 7;
+                            break;
+                        case 2:
+                            currentHall.status = 6;
+                            break;
+                    }
+                }
+                
             }
+            catch(Exception ex) { MessageBox.Show(ex.Message); }        
         }
         private void Exit(object sender, RoutedEventArgs args)
         {
@@ -95,7 +112,7 @@ namespace KingITProject.Pages.ManagerC
         {
             try
             {
-                using(var db = new KingITDBEntities())
+                using (var db = new KingITDBEntities(main.connectionName))
                 {
                     if (currentHall == null) //Если добавление
                     {
@@ -106,19 +123,18 @@ namespace KingITProject.Pages.ManagerC
                         currentHall.hall_id += 1;
                         currentHall.mall_id = currentMall.mall_id;
                         FillCurrent(); //заполненый павильон
-                        var selected = (from h in db.halls
-                                   where h.hall_id == currentHall.hall_id
-                                   select h).FirstOrDefault();
-                        if (selected == null) //павильон не повторяется
+                        if (currentHall != null)
                         {
-                            db.halls.Add(currentHall);
-                            db.SaveChanges();
+                            var selected = (from h in db.halls
+                                            where h.hall_id == currentHall.hall_id
+                                            select h).FirstOrDefault();
+                            if (selected == null) //павильон не повторяется
+                            {
+                                db.halls.Add(currentHall);
+                                db.SaveChanges();
+                            }
                         }
-                        else
-                        {
-                            MessageBox.Show($"{selected.hall_id} {selected.hall_number} /// {currentHall.hall_id} {currentHall.hall_number}");
-                            throw new Exception("Уже есть такой павильон");
-                        }
+                        
                     }
                     else
                     {
@@ -134,7 +150,7 @@ namespace KingITProject.Pages.ManagerC
                         selected.cost = currentHall.cost;
                         db.SaveChanges();
                     }
-                    
+
                 }
 
             }

@@ -54,8 +54,8 @@ namespace KingITProject.Pages.ManagerC
         }
         private void FillStatusBox()
         {
-            StatusCB.Items.Add("Арендован");
             StatusCB.Items.Add("Свободен");
+            StatusCB.Items.Add("Арендован");
             StatusCB.Items.Add("Забронирован");
             StatusCB.Items.Add("...");
         }
@@ -83,7 +83,7 @@ namespace KingITProject.Pages.ManagerC
             var selected = (getHalls_Result)DG.SelectedItem;
             try
             {
-                using(var db = new KingITDBEntities())
+                using(var db = new KingITDBEntities(main.connectionName))
                 {
                     var edited = (from h in db.halls
                                   where h.hall_number == selected.hall_number &&
@@ -91,7 +91,8 @@ namespace KingITProject.Pages.ManagerC
                                   select h).FirstOrDefault();
                     main.frame.Navigate(new EditHallList(main, edited, currentMall));
                 }
-            }catch{ }
+            }catch(Exception ex) { MessageBox.Show("Ошибка открытия окна\n" + ex.Message); }
+            FillDataGrid();
             
         }
         private void Delete(object sender, RoutedEventArgs e)
@@ -99,25 +100,21 @@ namespace KingITProject.Pages.ManagerC
             var selected = (getHalls_Result)DG.SelectedItem;
             try
             {
-                using (var db = new KingITDBEntities())
+                using (var db = new KingITDBEntities(main.connectionName))
                 {
                     var deleted = (from h in db.halls
                                   where h.hall_id == selected.hall_id
                                   select h).FirstOrDefault();
-                    deleted.status = 3;
-                    db.SaveChanges();
+                    if (deleted.status == 5)
+                    {
+                        deleted.status = 3;
+                        db.SaveChanges();
+                        FillDataGrid();
+                    }
+                    else MessageBox.Show("Павильон арендован или забронирован");
                 }
             }
-            catch { }
-            try
-            {
-                DoFilters(
-                FloorCB.SelectedIndex == -1 ? "..." : Convert.ToString(FloorCB.SelectedValue),
-                decimal.TryParse(AreaBoxMin.Text, out var i) ? Convert.ToDecimal(AreaBoxMin.Text) : 0,
-                decimal.TryParse(AreaBoxMax.Text, out i) ? Convert.ToDecimal(AreaBoxMax.Text) : 500,
-                StatusCB.SelectedIndex == -1 ? "..." : Convert.ToString(StatusCB.SelectedValue));
-            }
-            catch { }
+            catch(Exception ex) { MessageBox.Show(ex.Message); }
         }
         private void DoFilters(string floor, decimal min, decimal max, string status_title)
         {
