@@ -139,7 +139,6 @@ namespace KingITProject.Pages.ManagerC
                                 currentHall = null;
                             }
                         }
-
                     }
                     else
                     {

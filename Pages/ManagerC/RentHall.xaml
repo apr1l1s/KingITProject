@@ -1,0 +1,69 @@
+﻿<Window x:Class="KingITProject.Pages.ManagerC.RentHall"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KingITProject.Pages.ManagerC"
+        mc:Ignorable="d"
+        Title="RentHall" 
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Height="400" 
+        WindowStyle="None"
+        Width="300">
+    <Border 
+        BorderBrush="{DynamicResource DungerColor}"
+        BorderThickness="2">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="300"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel 
+                Margin="0,40,0,0"
+                Grid.Row="0"
+                Width="300">
+                <TextBlock 
+                    Text="Аренда павильона"
+                    Style="{DynamicResource EditMallListTextBlock}"/>
+                <TextBlock
+                    Text="Арендатор"
+                    Margin="0,20,0,0"
+                    Style="{DynamicResource EditMallListTextBlock}"/>
+                <ComboBox 
+                    Margin="0,10,0,0"
+                    x:Name="TenantBox"
+                    Style="{DynamicResource EditMallListComboBox}"/>
+                <TextBlock
+                    Text="Дата начала аренды"
+                    Margin="0,20,0,0"
+                    Style="{DynamicResource EditMallListTextBlock}"/>
+                <DatePicker 
+                    x:Name="DateStart"
+                    Margin="0,10,0,0"
+                    Width="200"/>
+                <TextBlock
+                    Text="Дата конца брони"
+                    Margin="0,20,0,0"
+                    Style="{DynamicResource EditMallListTextBlock}"/>
+                <DatePicker 
+                    x:Name="DateEnd"
+                    Margin="0,10,0,0"
+                    Width="200"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <Button
+                    Style="{DynamicResource MainWindowLogButton}"
+                    Content="Арендовать"
+                    Margin="0,10,0,0"
+                    Click="Rent"/>
+                <Button 
+                    Style="{DynamicResource MainWindowLogButton}"
+                    Content="Назад"
+                    Click="Exit"
+                    Margin="0,10,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+    
+</Window>

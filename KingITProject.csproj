@@ -131,6 +131,9 @@
     <Compile Include="Pages\ManagerC\HallsList.xaml.cs">
       <DependentUpon>HallsList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ManagerC\RentHall.xaml.cs">
+      <DependentUpon>RentHall.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tools\Conventer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -165,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ManagerC\MallList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ManagerC\RentHall.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

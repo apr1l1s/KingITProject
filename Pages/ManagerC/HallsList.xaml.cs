@@ -139,8 +139,12 @@ namespace KingITProject.Pages.ManagerC
         }
         private void DG_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
-            DelButton.IsEnabled = true;
-            EditButton.IsEnabled = true;
+            if (DG.SelectedIndex != -1)
+            {
+                DelButton.IsEnabled = true;
+                EditButton.IsEnabled = true;
+                RentButton.IsEnabled = true;
+            }
         }
         private void CB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -166,6 +170,26 @@ namespace KingITProject.Pages.ManagerC
                         decimal.TryParse(AreaBoxMax.Text, out i) ? Convert.ToDecimal(AreaBoxMax.Text) : 500,
                         StatusCB.SelectedIndex == -1 ? "..." : Convert.ToString(StatusCB.SelectedValue));
                 }
+            }
+        }
+        private void Rent(object sender, RoutedEventArgs e)
+        {
+            if (DG.SelectedIndex != -1)
+            {
+                var selected = (getHalls_Result)DG.SelectedItem;
+                try
+                {
+                    using (var db = new KingITDBEntities(main.connectionName))
+                    {
+                        var rented = (from h in db.halls
+                                      where h.hall_id == selected.hall_id
+                                      select h).FirstOrDefault();
+                        var rent = new RentHall(main, rented, currentMall);
+                        rent.ShowDialog();
+                        FillDataGrid();
+                    }
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
         }
     }

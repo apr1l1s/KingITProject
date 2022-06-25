@@ -120,7 +120,14 @@
                 Click="Exit"/>
             <Button 
                 Style="{DynamicResource ButtonStyle}"
-                Margin="360,0,0,0"
+                Margin="80,0,0,0"
+                Content="Арендовать"
+                x:Name="RentButton"
+                IsEnabled="False"
+                Click="Rent"/>
+            <Button 
+                Style="{DynamicResource ButtonStyle}"
+                Margin="80,0,0,0"
                 Content="Добавить"
                 Click="Add"/>
         </StackPanel>

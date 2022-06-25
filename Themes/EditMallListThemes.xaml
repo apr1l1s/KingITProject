@@ -4,6 +4,7 @@
         <Setter Property="Width" Value="200"/>
         <Setter Property="Margin" Value="0,1,0,0"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{DynamicResource DungerColor}"/>
     </Style>
     <Style x:Key="EditMallListComboBox" TargetType="{x:Type ComboBox}">
         <Setter Property="Width" Value="200"/>
