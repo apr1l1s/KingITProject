@@ -78,8 +78,8 @@ namespace KingITProject.Pages.ManagerC
                     Convert.ToDecimal(FactorBox.Text) < 0 ||
                     Convert.ToDecimal(CostBox.Text) <0) 
                 {
-                    MessageBox.Show($"{Convert.ToDecimal(AreaBox.Text)},{Convert.ToDecimal(FactorBox.Text)},{Convert.ToDecimal(FactorBox.Text)}");
-                    throw new Exception("Неверный формат строки"); 
+                    MessageBox.Show("Неверный формат строки");
+                    currentHall = null;
                 } else
                 {
                     currentHall.floor = Convert.ToInt32(FloorBox.Text);
@@ -123,7 +123,7 @@ namespace KingITProject.Pages.ManagerC
                         currentHall.hall_id += 1;
                         currentHall.mall_id = currentMall.mall_id;
                         FillCurrent(); //заполненый павильон
-                        if (currentHall != null)
+                        if (currentHall != null) //Если редактирование
                         {
                             var selected = (from h in db.halls
                                             where h.hall_id == currentHall.hall_id
@@ -132,23 +132,35 @@ namespace KingITProject.Pages.ManagerC
                             {
                                 db.halls.Add(currentHall);
                                 db.SaveChanges();
+                                main.frame.Navigate(new HallsList(main, currentMall));
+                            }
+                            else
+                            {
+                                currentHall = null;
                             }
                         }
-                        
+
                     }
                     else
                     {
                         FillCurrent();
-                        var selected = (from h in db.halls
-                                        where h.hall_id == currentHall.hall_id
-                                        select h).FirstOrDefault();
-                        selected.hall_number = currentHall.hall_number;
-                        selected.area = currentHall.area;
-                        selected.status = currentHall.status;
-                        selected.floor = currentHall.floor;
-                        selected.value_added_factor = currentHall.value_added_factor;
-                        selected.cost = currentHall.cost;
-                        db.SaveChanges();
+                        if (currentHall != null)
+                        {
+                            var selected = (from h in db.halls
+                                            where h.hall_id == currentHall.hall_id
+                                            select h).FirstOrDefault();
+                            if (selected != null)
+                            {
+                                selected.hall_number = currentHall.hall_number;
+                                selected.area = currentHall.area;
+                                selected.status = currentHall.status;
+                                selected.floor = currentHall.floor;
+                                selected.value_added_factor = currentHall.value_added_factor;
+                                selected.cost = currentHall.cost;
+                                db.SaveChanges();
+                                main.frame.Navigate(new HallsList(main, currentMall));
+                            }
+                        }
                     }
 
                 }
@@ -158,7 +170,7 @@ namespace KingITProject.Pages.ManagerC
             {
                 MessageBox.Show(ex.Message);
             }
-            main.frame.Navigate(new HallsList(main, currentMall));
+            
         }
     }
 }
