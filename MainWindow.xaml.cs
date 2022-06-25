@@ -7,6 +7,7 @@ namespace KingITProject
     public partial class MainWindow : Window
     {
         public string connectionName = "name=KingITDBEntitiesD";
+        public int emploer_id = 0;
         public MainWindow()
         {
             InitializeComponent();

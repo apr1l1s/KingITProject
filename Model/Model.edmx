@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Хранилище KingITDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Хранилище KingITDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="employers">
           <Key>
             <PropertyRef Name="employer_id" />
@@ -74,6 +74,16 @@
           </Key>
           <Property Name="status_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="title" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="tenants">
           <Key>
@@ -213,6 +223,7 @@
           </ReferentialConstraint>
         </Association>
         <Function Name="change_rent_date" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="getHalls" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="current" Type="int" Mode="In" />
           <ReturnType>
@@ -248,17 +259,8 @@
             </CollectionType>
           </ReturnType>
         </Function>
-        <Function Name="rent_pavilion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="action" Type="nvarchar" Mode="In" />
-          <Parameter Name="date_start" Type="date" Mode="In" />
-          <Parameter Name="date_end" Type="date" Mode="In" />
-          <Parameter Name="tenant_id" Type="int" Mode="In" />
-          <Parameter Name="hall_id" Type="int" Mode="In" />
-          <Parameter Name="mall_id" Type="int" Mode="In" />
-          <Parameter Name="employer_id" Type="int" Mode="In" />
-          <Parameter Name="hall_number" Type="nvarchar" Mode="In" />
-        </Function>
         <Function Name="rentHall" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="hall_id" Type="int" Mode="In" />
           <Parameter Name="status_action" Type="bit" Mode="In" />
           <Parameter Name="hall_number" Type="nvarchar" Mode="In" />
           <Parameter Name="mall_id" Type="int" Mode="In" />
@@ -267,6 +269,36 @@
           <Parameter Name="tenant_id" Type="int" Mode="In" />
           <Parameter Name="employer_id" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="Хранилище KingITDBModelContainer">
           <EntitySet Name="employers" EntityType="Self.employers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="halls" EntityType="Self.halls" Schema="dbo" store:Type="Tables" />
@@ -274,6 +306,7 @@
           <EntitySet Name="postes" EntityType="Self.postes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="rent" EntityType="Self.rent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="statuses" EntityType="Self.statuses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tenants" EntityType="Self.tenants" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="getHallsView" EntityType="Self.getHallsView" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -322,7 +355,8 @@
             <End Role="malls" EntitySet="malls" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="KingITDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -622,10 +656,20 @@
             <End Role="rent" EntitySet="rents" />
           </AssociationSet>
           <FunctionImport Name="getHalls" IsComposable="true" ReturnType="Collection(KingITDBModel.getHalls_Result)">
-          <Parameter Name="current" Mode="In" Type="Int32" />
+            <Parameter Name="current" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="getMalls" IsComposable="true" ReturnType="Collection(KingITDBModel.getMalls_Result)" />
           <FunctionImport Name="change_rent_date" />
+          <FunctionImport Name="rentHall">
+            <Parameter Name="hall_id" Mode="In" Type="Int32" />
+            <Parameter Name="status_action" Mode="In" Type="Boolean" />
+            <Parameter Name="hall_number" Mode="In" Type="String" />
+            <Parameter Name="mall_id" Mode="In" Type="Int32" />
+            <Parameter Name="start_date" Mode="In" Type="DateTime" />
+            <Parameter Name="end_date" Mode="In" Type="DateTime" />
+            <Parameter Name="tenant_id" Mode="In" Type="Int32" />
+            <Parameter Name="employer_id" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="sp_alterdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
@@ -656,25 +700,6 @@
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
-          <FunctionImport Name="rent_pavilion">
-            <Parameter Name="action" Mode="In" Type="String" />
-            <Parameter Name="date_start" Mode="In" Type="DateTime" />
-            <Parameter Name="date_end" Mode="In" Type="DateTime" />
-            <Parameter Name="tenant_id" Mode="In" Type="Int32" />
-            <Parameter Name="hall_id" Mode="In" Type="Int32" />
-            <Parameter Name="mall_id" Mode="In" Type="Int32" />
-            <Parameter Name="employer_id" Mode="In" Type="Int32" />
-            <Parameter Name="hall_number" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="rentHall">
-            <Parameter Name="status_action" Mode="In" Type="Boolean" />
-            <Parameter Name="hall_number" Mode="In" Type="String" />
-            <Parameter Name="mall_id" Mode="In" Type="Int32" />
-            <Parameter Name="start_date" Mode="In" Type="DateTime" />
-            <Parameter Name="end_date" Mode="In" Type="DateTime" />
-            <Parameter Name="tenant_id" Mode="In" Type="Int32" />
-            <Parameter Name="employer_id" Mode="In" Type="Int32" />
-          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -769,6 +794,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="KingITDBModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="tenants">
             <EntityTypeMapping TypeName="KingITDBModel.tenant">
               <MappingFragment StoreEntitySet="tenants">
@@ -826,9 +862,32 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="change_rent_date" FunctionName="Хранилище KingITDBModel.change_rent_date" />
-          <FunctionImportMapping FunctionImportName="rent_pavilion" FunctionName="Хранилище KingITDBModel.rent_pavilion" />
           <FunctionImportMapping FunctionImportName="rentHall" FunctionName="Хранилище KingITDBModel.rentHall" />
-          </EntityContainerMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Хранилище KingITDBModel.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Хранилище KingITDBModel.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Хранилище KingITDBModel.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Хранилище KingITDBModel.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KingITDBModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Хранилище KingITDBModel.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KingITDBModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище KingITDBModel.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище KingITDBModel.sp_upgraddiagrams" />
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

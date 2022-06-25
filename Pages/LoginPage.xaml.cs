@@ -48,7 +48,7 @@ namespace KingITProject.Pages
                             if (UserType != 0)
                             {
                                 MessageBox.Show("Вы вошли");
-                                
+                                mainWindow.emploer_id = UserType;
                                 switch (UserType)
                                 {
                                     case 3:
