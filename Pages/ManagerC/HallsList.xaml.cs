@@ -176,20 +176,23 @@ namespace KingITProject.Pages.ManagerC
         {
             if (DG.SelectedIndex != -1)
             {
-                var selected = (getHalls_Result)DG.SelectedItem;
                 try
                 {
+                    var selected = (getHalls_Result)DG.SelectedItem;
                     using (var db = new KingITDBEntities(main.connectionName))
                     {
                         var rented = (from h in db.halls
                                       where h.hall_id == selected.hall_id
                                       select h).FirstOrDefault();
-                        var rent = new RentHall(main, rented, currentMall);
+                        var rent = new RentHall(main, rented);
                         rent.ShowDialog();
                         FillDataGrid();
                     }
                 }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
+                catch (Exception ex) 
+                { 
+                    MessageBox.Show(ex.Message); 
+                }
             }
         }
     }

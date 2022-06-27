@@ -54,6 +54,9 @@ namespace KingITProject.Pages
                                     case 3:
                                         mainWindow.frame.Navigate(new ManagerC.MallList(mainWindow));
                                         break;
+                                    case 2:
+                                        mainWindow.frame.Navigate(new ManagerA.TenantsList(mainWindow));
+                                        break;
                                 }
                             } else
                             {

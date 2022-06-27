@@ -18,7 +18,7 @@ namespace KingITProject.Model
     public partial class KingITDBEntities : DbContext
     {
         public KingITDBEntities()
-            : base("name=KingITDBEntitiesD")
+            : base("name=KingITDBEntities1")
         {
         }
         public KingITDBEntities(string s)
@@ -40,6 +40,7 @@ namespace KingITProject.Model
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<tenant> tenants { get; set; }
         public virtual DbSet<getHallsView> getHallsViews { get; set; }
+        public virtual DbSet<statMallView> statMallViews { get; set; }
     
         [DbFunction("KingITDBEntities1", "getHalls")]
         public virtual IQueryable<getHalls_Result> getHalls(Nullable<int> current)
@@ -200,6 +201,11 @@ namespace KingITProject.Model
         public virtual int sp_upgraddiagrams()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
+        }
+    
+        public virtual ObjectResult<statMall_Result> statMall()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<statMall_Result>("statMall");
         }
     }
 }

@@ -22,15 +22,11 @@ namespace KingITProject.Pages.ManagerC
     {
         MainWindow main;
         hall currentHall;
-        mall currentMall;
-
-
-        public RentHall(MainWindow _main, hall _currentHall, mall _currentMall)
+        public RentHall(MainWindow _main, hall _currentHall)
         {
             InitializeComponent();
             main = _main;
             currentHall = _currentHall;
-            currentMall = _currentMall;
             FillTenantBox();
             blockDates();
         }
@@ -55,13 +51,16 @@ namespace KingITProject.Pages.ManagerC
                 using(var db = new KingITDBEntities())
                 {
                     var lastdate = new CalendarDateRange() { End = DateTime.MinValue };
-                    foreach (rent current in db.rents)
+                    foreach (rent current in (from r in db.rents 
+                                              where r.hall_id == currentHall.hall_id 
+                                              select r).ToList())
                     {
                         DateEnd.BlackoutDates.Add(new CalendarDateRange() { Start = current.start_date, End = current.end_date });
                         DateStart.BlackoutDates.Add(new CalendarDateRange() { Start = current.start_date, End = current.end_date });
                         if (lastdate.End < current.end_date) lastdate.End = current.end_date;
                     }
                     DateStart.DisplayDate = lastdate.End;
+
                     DateEnd.DisplayDate = lastdate.End;
                 }
             }
@@ -80,12 +79,20 @@ namespace KingITProject.Pages.ManagerC
                 {
                     var start = DateStart.SelectedDate.Value;
                     var end = DateEnd.SelectedDate.Value;
-                    MessageBox.Show(DateTime.Now.DayOfYear.ToString());
+                    MessageBox.Show($"{start}, {DateTime.Now}");
+
                     var tenant_id = (from t in db.tenants 
                                      where t.title == TenantBox.SelectedValue.ToString() 
                                      select t.tenant_id).First();
-                     db.rentHall(currentHall.hall_id,(start.DayOfYear == DateTime.Now.DayOfYear) ? true : false,
-                     currentHall.hall_number, currentHall.mall_id, start, end, tenant_id,main.emploer_id);
+
+                     db.rentHall(
+                         currentHall.hall_id,(start == DateTime.Now) ? true : false,
+                         currentHall.hall_number, 
+                         currentHall.mall_id, 
+                         start, 
+                         end, 
+                         tenant_id,
+                         main.emploer_id);
                     db.SaveChanges();
                 }
             }

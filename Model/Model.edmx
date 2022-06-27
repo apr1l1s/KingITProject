@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище KingITDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище KingITDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="employers">
           <Key>
             <PropertyRef Name="employer_id" />
@@ -119,6 +119,24 @@
           <Property Name="value_added_factor" Type="decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="cost" Type="decimal" Precision="5" Scale="1" Nullable="false" />
           <Property Name="hall_id" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "KingITDB.dbo.statMallView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="statMallView">
+          <Key>
+            <PropertyRef Name="title" />
+            <PropertyRef Name="address" />
+            <PropertyRef Name="halls_count" />
+            <PropertyRef Name="mall_id" />
+          </Key>
+          <Property Name="title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="free_halls_count" Type="int" />
+          <Property Name="halls_count" Type="int" Nullable="false" />
+          <Property Name="rented_halls_count" Type="int" />
+          <Property Name="free_halls_area" Type="decimal" Precision="38" Scale="1" />
+          <Property Name="avg_halls_cost" Type="decimal" Precision="38" Scale="6" />
+          <Property Name="mall_id" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="fk_id_role">
           <End Role="postes" Type="Self.postes" Multiplicity="1">
@@ -299,6 +317,7 @@
           <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="statMall" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="Хранилище KingITDBModelContainer">
           <EntitySet Name="employers" EntityType="Self.employers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="halls" EntityType="Self.halls" Schema="dbo" store:Type="Tables" />
@@ -321,6 +340,18 @@
     [getHallsView].[cost] AS [cost], 
     [getHallsView].[hall_id] AS [hall_id]
     FROM [dbo].[getHallsView] AS [getHallsView]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="statMallView" EntityType="Self.statMallView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [statMallView].[title] AS [title], 
+    [statMallView].[address] AS [address], 
+    [statMallView].[free_halls_count] AS [free_halls_count], 
+    [statMallView].[halls_count] AS [halls_count], 
+    [statMallView].[rented_halls_count] AS [rented_halls_count], 
+    [statMallView].[free_halls_area] AS [free_halls_area], 
+    [statMallView].[avg_halls_cost] AS [avg_halls_cost], 
+    [statMallView].[mall_id] AS [mall_id]
+    FROM [dbo].[statMallView] AS [statMallView]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_id_role" Association="Self.fk_id_role">
             <End Role="postes" EntitySet="postes" />
@@ -355,8 +386,7 @@
             <End Role="malls" EntitySet="malls" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="KingITDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -656,7 +686,7 @@
             <End Role="rent" EntitySet="rents" />
           </AssociationSet>
           <FunctionImport Name="getHalls" IsComposable="true" ReturnType="Collection(KingITDBModel.getHalls_Result)">
-            <Parameter Name="current" Mode="In" Type="Int32" />
+          <Parameter Name="current" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="getMalls" IsComposable="true" ReturnType="Collection(KingITDBModel.getMalls_Result)" />
           <FunctionImport Name="change_rent_date" />
@@ -700,6 +730,8 @@
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="statMallViews" EntityType="KingITDBModel.statMallView" />
+          <FunctionImport Name="statMall" ReturnType="Collection(KingITDBModel.statMall_Result)" />
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -711,6 +743,31 @@
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="statMallView">
+          <Key>
+            <PropertyRef Name="title" />
+            <PropertyRef Name="address" />
+            <PropertyRef Name="halls_count" />
+            <PropertyRef Name="mall_id" />
+          </Key>
+          <Property Name="title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="free_halls_count" Type="Int32" />
+          <Property Name="halls_count" Type="Int32" Nullable="false" />
+          <Property Name="rented_halls_count" Type="Int32" />
+          <Property Name="free_halls_area" Type="Decimal" Precision="38" Scale="1" />
+          <Property Name="avg_halls_cost" Type="Decimal" Precision="38" Scale="6" />
+          <Property Name="mall_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="statMall_Result">
+          <Property Type="Int32" Name="mall_id" Nullable="false" />
+          <Property Type="String" Name="title" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="address" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="free_halls_count" Nullable="true" />
+          <Property Type="Int32" Name="rented_halls_count" Nullable="true" />
+          <Property Type="Decimal" Name="free_halls_area" Nullable="true" Precision="38" Scale="1" />
+          <Property Type="Decimal" Name="avg_halls_cost" Nullable="true" Precision="38" Scale="6" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -887,6 +944,33 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище KingITDBModel.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище KingITDBModel.sp_upgraddiagrams" />
+          <EntitySetMapping Name="statMallViews">
+            <EntityTypeMapping TypeName="KingITDBModel.statMallView">
+              <MappingFragment StoreEntitySet="statMallView">
+                <ScalarProperty Name="mall_id" ColumnName="mall_id" />
+                <ScalarProperty Name="avg_halls_cost" ColumnName="avg_halls_cost" />
+                <ScalarProperty Name="free_halls_area" ColumnName="free_halls_area" />
+                <ScalarProperty Name="rented_halls_count" ColumnName="rented_halls_count" />
+                <ScalarProperty Name="halls_count" ColumnName="halls_count" />
+                <ScalarProperty Name="free_halls_count" ColumnName="free_halls_count" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="title" ColumnName="title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="statMall" FunctionName="Хранилище KingITDBModel.statMall">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KingITDBModel.statMall_Result">
+                <ScalarProperty Name="mall_id" ColumnName="mall_id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="free_halls_count" ColumnName="free_halls_count" />
+                <ScalarProperty Name="rented_halls_count" ColumnName="rented_halls_count" />
+                <ScalarProperty Name="free_halls_area" ColumnName="free_halls_area" />
+                <ScalarProperty Name="avg_halls_cost" ColumnName="avg_halls_cost" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
