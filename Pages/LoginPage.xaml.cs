@@ -34,15 +34,17 @@ namespace KingITProject.Pages
         }
         private void Login(object sender, RoutedEventArgs e)
         {
-            if (Attemps >= 3) { 
-                ShowCaptcha(); 
+            if (Attemps >= 3)
+            {
+                ShowCaptcha();
             }
-            else {
+            else
+            {
                 try
                 {
-                    if(mail.IsMatch(LogBox.Text))
+                    if (mail.IsMatch(LogBox.Text))
                     {
-                        if(pas.IsMatch(PassBox.Password))
+                        if (pas.IsMatch(PassBox.Password))
                         {
                             var UserType = CheckUser(LogBox.Text, PassBox.Password);
                             if (UserType != 0)
@@ -58,25 +60,29 @@ namespace KingITProject.Pages
                                         mainWindow.frame.Navigate(new ManagerA.TenantsList(mainWindow));
                                         break;
                                 }
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("Неправильный логин или пароль");
                                 Attemps++;
                             }
                         }
                         else MessageBox.Show("Неподходящий формат пароля");
-                    } else MessageBox.Show("Неподходящий формат логина");
-                    
-                } catch(Exception ex)
+                    }
+                    else MessageBox.Show("Неподходящий формат логина");
+
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
             }
         }
-        public void ShowCaptcha() {
+        public void ShowCaptcha()
+        {
             var captcha = new Captcha();
             captcha.ShowDialog();
-            Attemps = 0; 
+            Attemps = 0;
         }
         private int CheckUser(string login, string pass)
         {

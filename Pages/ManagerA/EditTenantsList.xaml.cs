@@ -69,7 +69,7 @@ namespace KingITProject.Pages.ManagerA
         {
             try
             {
-                using(var db = new KingITDBEntities())
+                using(var db = new KingITDBEntities(main.connectionName))
                 {
                     if (currentTenant == null)
                     {

@@ -62,7 +62,7 @@ namespace KingITProject.Pages.ManagerA
         {
             try
             {
-                using(var db = new KingITDBEntities())
+                using(var db = new KingITDBEntities(main.connectionName))
                 {
                     var selectedTenant = db.tenants.Find(((tenant)DG.SelectedItem).tenant_id);
                     var page = new EditTenantsList(main, selectedTenant);
@@ -99,7 +99,7 @@ namespace KingITProject.Pages.ManagerA
         }
         private void Stat(object sender, RoutedEventArgs e)
         {
-            var page = new MallsStat();
+            var page = new MallsStat(main);
             page.ShowDialog();
         }
     }

@@ -20,7 +20,8 @@ namespace KingITProject.Pages.ManagerA
     /// </summary>
     public partial class MallsStat : Window
     {
-        public MallsStat()
+        MainWindow main;
+        public MallsStat(MainWindow _main)
         {
             InitializeComponent();
             FillCB();
@@ -30,7 +31,7 @@ namespace KingITProject.Pages.ManagerA
         {
             try
             {
-                using (var db = new KingITDBEntities())
+                using (var db = new KingITDBEntities(main.connectionName))
                 {
                     MallBox.ItemsSource = (from m in db.statMall()
                                       select m.title).ToList();
@@ -42,7 +43,7 @@ namespace KingITProject.Pages.ManagerA
         {
             try
             {
-                using(var db = new KingITDBEntities())
+                using(var db = new KingITDBEntities(main.connectionName))
                 {
                     if (s != "")
                     {
